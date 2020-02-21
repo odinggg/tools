@@ -4,6 +4,7 @@ import org.apache.http.Consts;
 import org.apache.http.HeaderIterator;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
 import org.apache.http.ParseException;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpDelete;
@@ -13,6 +14,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.config.Registry;
 import org.apache.http.config.RegistryBuilder;
 import org.apache.http.conn.socket.ConnectionSocketFactory;
@@ -32,6 +34,8 @@ import org.apache.http.ssl.SSLContexts;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.net.ssl.SSLContext;
@@ -40,7 +44,9 @@ import java.net.URI;
 import java.security.KeyStore;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 
 /**
@@ -204,12 +210,50 @@ public class HttpClientUtil {
     }
 
     public static String get(String url, Map<String, String> headers) {
-        return send(url, RequestMethod.GET, null, headers, false);
+        return send(url, RequestMethod.GET, null, null, headers, false);
     }
 
-    public static String send(String url, RequestMethod type, Object data, Map<String, String> headers, boolean isJson) {
+    public static String get(String url) {
+        return send(url, RequestMethod.GET, null, null, null, false);
+    }
+
+    public static String get(String url, Map<String, String> params, Map<String, String> headers) {
+        if (!CollectionUtils.isEmpty(params)) {
+            try {
+                List<NameValuePair> collect = params.entrySet()
+                        .stream()
+                        .map(stringStringEntry -> new BasicHeader(stringStringEntry.getKey(), stringStringEntry.getValue()))
+                        .collect(Collectors.toList());
+                URIBuilder uriBuilder = new URIBuilder(url);
+                uriBuilder.setParameters(collect);
+                url = uriBuilder.build().toString();
+            } catch (Exception e) {
+                LOGGER.error("uri error:", e);
+            }
+        }
+        return send(url, RequestMethod.GET, null, null, headers, false);
+    }
+
+    public static String send(String url, RequestMethod type, Object data, Map<String, String> params, Map<String, String> headers, boolean isJson) {
+        return send(url, type, data, params, headers, isJson, null);
+    }
+
+    public static String send(String url, RequestMethod type, Object data, Map<String, String> params, Map<String, String> headers, boolean isJson, String mimeType) {
+        if (!CollectionUtils.isEmpty(params)) {
+            try {
+                List<NameValuePair> collect = params.entrySet()
+                        .stream()
+                        .map(stringStringEntry -> new BasicHeader(stringStringEntry.getKey(), stringStringEntry.getValue()))
+                        .collect(Collectors.toList());
+                URIBuilder uriBuilder = new URIBuilder(url);
+                uriBuilder.setParameters(collect);
+                url = uriBuilder.build().toString();
+            } catch (Exception e) {
+                LOGGER.error("uri error:", e);
+            }
+        }
         LOGGER.info("http请求地址：{}", url);
-        HttpUriRequest request = null;
+        HttpRequestBase request = null;
         HttpEntity entity = null;
         String result = "";
         switch (type) {
@@ -238,21 +282,23 @@ public class HttpClientUtil {
             stringStringHashMap.put("Content-Type", "application/json");
             setHeaders(stringStringHashMap, request);
         }
-        ((HttpRequestBase) request).setURI(URI.create(url));
+        request.setURI(URI.create(url));
         if (isJson) {
             if (!(data instanceof String)) {
-                data = JacksonConvertUtil.objectToJson(data);
+                data = JacksonConvertUtil.toJsonString(data);
             }
             entity = new StringEntity((String) data, ContentType.create("application/json", Consts.UTF_8));
             LOGGER.info("http请求内容：{}", data);
         } else if (data instanceof byte[]) {
             entity = new ByteArrayEntity((byte[]) data, 0, ((byte[]) data).length);
-            LOGGER.debug("http请求内容：{}", JacksonConvertUtil.objectToJson(data));
-        }/*else if (!isJson && data instanceof String){
-            entity = new StringEntity((String) data);
-        }*/
+            LOGGER.debug("http请求内容：{}", JacksonConvertUtil.toJsonString(data));
+        } else if (!StringUtils.isEmpty(mimeType)) {
+            entity = new StringEntity((String) data, ContentType.create(mimeType, Consts.UTF_8));
+        }
         if (entity != null) {
-            ((HttpEntityEnclosingRequestBase) request).setEntity(entity);
+            if (request instanceof HttpEntityEnclosingRequestBase) {
+                ((HttpEntityEnclosingRequestBase) request).setEntity(entity);
+            }
         }
         try (CloseableHttpClient httpClient = getHttpClient()) {
             if (config == null) {
@@ -262,7 +308,7 @@ public class HttpClientUtil {
                         .setConnectionRequestTimeout(2000)
                         .build();
             }
-            ((HttpRequestBase) request).setConfig(config);
+            request.setConfig(config);
             HttpResponse httpResponse = httpClient.execute(request);
             int statusCode = httpResponse.getStatusLine().getStatusCode();
             if (statusCode == 200 || statusCode == 202) {
@@ -278,13 +324,13 @@ public class HttpClientUtil {
         return result;
     }
 
-    public static String send(int connectTimeout, int readTimeout, String url, RequestMethod type, Object data, Map<String, String> headers, boolean isJson) {
+    public static String send(int connectTimeout, int readTimeout, String url, RequestMethod type, Object data, Map<String, String> params, Map<String, String> headers, boolean isJson, String mimeType) {
         config = RequestConfig.custom()
                 .setSocketTimeout(readTimeout)
                 .setConnectTimeout(connectTimeout)
                 .setConnectionRequestTimeout(2000)
                 .build();
-        return send(url, type, data, headers, isJson);
+        return send(url, type, data, params, headers, isJson, mimeType);
     }
 
     static {
@@ -305,5 +351,9 @@ public class HttpClientUtil {
             var4.printStackTrace();
         }
 
+    }
+
+    public static String send(String url, RequestMethod type, Object data, Map<String, String> headers, boolean isJson) {
+        return send(url, type, data, null, headers, isJson);
     }
 }

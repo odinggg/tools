@@ -89,7 +89,8 @@ public class CustomWebSocketHandler extends TextWebSocketHandler implements WebS
     public void sendMessage(String jsonData) {
         logger.info("收到客户端消息sendMessage：{}", jsonData);
         JsonNode json = JacksonConvertUtil.getJSON(jsonData);
-        String mchNo = StringUtils.isEmpty(JacksonConvertUtil.getJSONString(json, CLIENT_ID)) ? "陌生人" : JacksonConvertUtil.getJSONString(json, CLIENT_ID);
+        String mchNo = StringUtils.isEmpty(JacksonConvertUtil.getJSONString(json, CLIENT_ID)) ? "陌生人" : JacksonConvertUtil
+                .getJSONString(json, CLIENT_ID);
         String to = JacksonConvertUtil.getJSONString(json, "to");
         String msg = JacksonConvertUtil.getJSONString(json, "msg");
         if ("all".equals(to.toLowerCase())) {

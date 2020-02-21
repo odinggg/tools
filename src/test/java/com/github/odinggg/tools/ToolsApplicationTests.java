@@ -1,10 +1,15 @@
 package com.github.odinggg.tools;
 
 import com.github.odinggg.tools.bilibili.BilibiliVedioDownload;
+import com.github.odinggg.tools.enums.HttpParamEnum;
 import com.github.odinggg.tools.model.Aria2Request;
 import com.github.odinggg.tools.model.BilibiliAira2Data;
 import com.github.odinggg.tools.model.GetSubmitVideoResponse;
+import com.github.odinggg.tools.model.WorkWeChatMessage;
+import com.github.odinggg.tools.model.WorkWeChatResponse;
 import com.github.odinggg.tools.tasks.Aria2DownloadTask;
+import com.github.odinggg.tools.util.JacksonConvertUtil;
+import com.github.odinggg.tools.wechat.WorkWeChatInterface;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -16,6 +21,7 @@ import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -95,6 +101,29 @@ public class ToolsApplicationTests {
             List<BilibiliAira2Data> dataList = collect.subList(0, 1);
             bilibiliVedioDownload.synchronousSendAria2(dataList);
         }
+    }
+
+    @Autowired
+    private Configuration configuration;
+
+    @Test
+    public void test5() {
+        Map<HttpParamEnum, Configuration.Param> httpParam = configuration.getHttpParam();
+        Configuration.Param param = httpParam.get(HttpParamEnum.WORK_WECHAT_SEND);
+        System.out.println(JacksonConvertUtil.objectToJson(param));
+    }
+
+    @Autowired
+    private WorkWeChatInterface workWeChatInterface;
+
+    @Test
+    public void test6() {
+        WorkWeChatMessage workWeChatMessage = new WorkWeChatMessage();
+        WorkWeChatMessage.TextBean textBean = new WorkWeChatMessage.TextBean();
+        textBean.setContent("jlkajlkajlk ");
+        workWeChatMessage.setText(textBean);
+        WorkWeChatResponse workWeChatResponse = workWeChatInterface.sendMessage(workWeChatMessage);
+        System.out.println(JacksonConvertUtil.objectToJson(workWeChatResponse));
     }
 }
 

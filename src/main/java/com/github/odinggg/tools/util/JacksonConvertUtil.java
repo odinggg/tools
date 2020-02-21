@@ -27,7 +27,7 @@ import java.util.Map;
 /**
  * 描述:
  *
- * @outhor Hansen
+ * @outhor QinHaoChun
  * @create 2018-08-29 15:46
  */
 public final class JacksonConvertUtil {
@@ -39,15 +39,15 @@ public final class JacksonConvertUtil {
     }
 
     public static String objectToJson(Object objectModel) throws JsonConvertException {
-        return objectToJson(objectModel, (JsonInclude.Include) null, (PropertyNamingStrategy.PropertyNamingStrategyBase) null);
+        return objectToJson(objectModel, null, null);
     }
 
     public static String objectToJson(Object objectModel, JsonInclude.Include include) throws JsonConvertException {
-        return objectToJson(objectModel, include, (PropertyNamingStrategy.PropertyNamingStrategyBase) null);
+        return objectToJson(objectModel, include, null);
     }
 
     public static String objectToJson(Object objectModel, PropertyNamingStrategy.PropertyNamingStrategyBase nameStrategy) throws JsonConvertException {
-        return objectToJson(objectModel, (JsonInclude.Include) null, nameStrategy);
+        return objectToJson(objectModel, null, nameStrategy);
     }
 
     public static String objectToJson(Object objectModel, JsonInclude.Include include, PropertyNamingStrategy.PropertyNamingStrategyBase nameStrategy) throws JsonConvertException {
@@ -64,7 +64,7 @@ public final class JacksonConvertUtil {
     }
 
     public static <T> T jsonToObject(String jsonStringData, Class<T> targetClass) throws JsonConvertException {
-        return jsonToObject(jsonStringData, targetClass, (PropertyNamingStrategy.PropertyNamingStrategyBase) null);
+        return jsonToObject(jsonStringData, targetClass, null);
     }
 
     public static Map jsonToObject(String jsonStringData) throws JsonConvertException, IOException {
@@ -89,7 +89,11 @@ public final class JacksonConvertUtil {
         ObjectMapper mapper = new ObjectMapper();
         mapper.setPropertyNamingStrategy(nameStrategy);
         mapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
-
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        mapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
+        mapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);
+        mapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
+        mapper.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
         try {
             return mapper.readValue(jsonStringData, targetClass);
         } catch (IOException var6) {
@@ -102,9 +106,9 @@ public final class JacksonConvertUtil {
         }
     }
 
-    public static JavaType getCollectionType(Class<?> parametrized, Class<?> parametersFor, Class... elementClasses) {
+    public static JavaType getCollectionType(Class<?> parametrized, Class... elementClasses) {
         ObjectMapper mapper = new ObjectMapper();
-        return mapper.getTypeFactory().constructParametrizedType(parametrized, parametersFor, elementClasses);
+        return mapper.getTypeFactory().constructParametricType(parametrized, elementClasses);
     }
 
     public static <T> T jsonToObject(String jsonStringData, JavaType collectionType) throws JsonConvertException {

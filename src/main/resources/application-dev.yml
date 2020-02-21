@@ -1,0 +1,11 @@
+config:
+  http-param:
+    work-wechat:
+      url: http://
+      secret: 34d04068
+      accessKey: e79286
+      tokenUrl: hhh
+      username: xxx
+      password: 123
+      method: get
+
