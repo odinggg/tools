@@ -158,9 +158,9 @@ public class GetSubmitVideoResponse {
              * pic : //i0.hdslb.com/bfs/archive/c4415d5c5014d635e0e096f29f3c9e32ade3d7d9.jpg
              * subtitle :
              * description : 编程技术交流群：167399488（勿吹水闲聊）
-             视频教程源于网络仅供学习，若有侵权，私信删除。
-             【请勿相信视频中出现的网址和企鹅号及二维码等联系信息，以防上当受骗】
-             up的编程技术交流小组在主页，资料也在小组中，大家一起交流哦。
+             * 视频教程源于网络仅供学习，若有侵权，私信删除。
+             * 【请勿相信视频中出现的网址和企鹅号及二维码等联系信息，以防上当受骗】
+             * up的编程技术交流小组在主页，资料也在小组中，大家一起交流哦。
              * copyright :
              * title : 【薪资突破20K】JavaEE在职加薪课之大数据转型必备课程-Hadoop3
              * review : 0

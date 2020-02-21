@@ -120,13 +120,13 @@ public class ToolServiceImpl implements ToolService {
             if (split.length > 1) {
                 TextNode temp = new TextNode();
                 TextNode textNode1 = TEXT_NODES.get(split[0]);
-                if (textNode == null){
-                    TEXT_NODES.put(textNode.getKey(),textNode);
-                }else {
+                if (textNode == null) {
+                    TEXT_NODES.put(textNode.getKey(), textNode);
+                } else {
                     TextNode textNode2 = textNode1.getChildrenList().get(split[1]);
-                    if (textNode2 == null){
+                    if (textNode2 == null) {
 
-                    }else {
+                    } else {
 
                     }
                 }

@@ -24,11 +24,11 @@ public class TumblrAttention {
                 try {
                     notFollow = driver.findElementByXPath("//div[@class=\"user-actions btn-group not-following not-muting can-dm \"]");
                 } catch (Exception e1) {
-                    if (e1 instanceof NoSuchElementException)return;
+                    if (e1 instanceof NoSuchElementException) return;
                 }
             }
         }
-        if (notFollow==null)return;
+        if (notFollow == null) return;
         WebElement followElement = notFollow.findElement(By.className("EdgeButton--secondary"));
         followElement.click();
         Thread.sleep(1000);
