@@ -1,4 +1,4 @@
-﻿package com.github.odinggg.tools.util.wechat;
+package com.github.odinggg.tools.util.wechat;
 
 @SuppressWarnings("serial")
 public class AesException extends Exception {

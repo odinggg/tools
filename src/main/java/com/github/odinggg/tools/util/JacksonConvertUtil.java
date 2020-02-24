@@ -12,6 +12,7 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.github.odinggg.tools.util.json.JsonConvertException;
 import com.github.odinggg.tools.util.json.UpperCaseNameStrategy;
 import org.slf4j.Logger;
@@ -63,8 +64,26 @@ public final class JacksonConvertUtil {
         }
     }
 
+    public static String objectToXml(Object objectModel) throws JsonConvertException {
+        return objectToXml(objectModel, null, null);
+    }
+
+    public static String objectToXml(Object objectModel, JsonInclude.Include include, PropertyNamingStrategy.PropertyNamingStrategyBase nameStrategy) throws JsonConvertException {
+        XmlMapper mapper = getXmlMapper(nameStrategy);
+        try {
+            return mapper.writeValueAsString(objectModel);
+        } catch (JsonProcessingException var5) {
+            logger.error("对象转字符串异常：" + var5.getMessage());
+            throw new JsonConvertException(var5);
+        }
+    }
+
     public static <T> T jsonToObject(String jsonStringData, Class<T> targetClass) throws JsonConvertException {
         return jsonToObject(jsonStringData, targetClass, null);
+    }
+
+    public static <T> T xmlToObject(String xmlStringData, Class<T> targetClass) throws JsonConvertException {
+        return xmlToObject(xmlStringData, targetClass, null);
     }
 
     public static Map jsonToObject(String jsonStringData) throws JsonConvertException, IOException {
@@ -103,6 +122,62 @@ public final class JacksonConvertUtil {
             builder.append("转换为：" + targetClass.getName() + "类异常");
             logger.error(builder.toString());
             throw new JsonConvertException(var6);
+        }
+    }
+
+    public static XmlMapper getXmlMapper(PropertyNamingStrategy.PropertyNamingStrategyBase nameStrategy) {
+        XmlMapper mapper = new XmlMapper();
+        if (nameStrategy != null) {
+            mapper.setPropertyNamingStrategy(nameStrategy);
+        }
+        mapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        mapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
+        mapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);
+        mapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
+        mapper.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
+        return mapper;
+    }
+
+    public static <T> T xmlToObject(String xmlStringData, Class<T> targetClass, PropertyNamingStrategy.PropertyNamingStrategyBase nameStrategy) throws JsonConvertException {
+        XmlMapper mapper = getXmlMapper(nameStrategy);
+        try {
+            return mapper.readValue(xmlStringData, targetClass);
+        } catch (IOException var6) {
+            logger.error(var6.getMessage());
+            StringBuilder builder = new StringBuilder();
+            builder.append("字符串：" + xmlStringData);
+            builder.append("转换为：" + targetClass.getName() + "类异常");
+            logger.error(builder.toString());
+            throw new JsonConvertException(var6);
+        }
+    }
+
+    public static <T> T xmlToObject(String jsonStringData, TypeReference<T> collectionType) throws JsonConvertException {
+        XmlMapper mapper = getXmlMapper(null);
+        try {
+            return mapper.readValue(jsonStringData, collectionType);
+        } catch (IOException var5) {
+            logger.error(var5.getMessage());
+            StringBuilder builder = new StringBuilder();
+            builder.append("字符串：" + jsonStringData);
+            builder.append("转换为" + collectionType.getType().getTypeName() + "类异常");
+            logger.error(builder.toString());
+            throw new JsonConvertException(var5);
+        }
+    }
+
+    public static <T> T jsonToObject(String jsonStringData, TypeReference<T> collectionType) throws JsonConvertException {
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            return mapper.readValue(jsonStringData, collectionType);
+        } catch (IOException var5) {
+            logger.error(var5.getMessage());
+            StringBuilder builder = new StringBuilder();
+            builder.append("字符串：" + jsonStringData);
+            builder.append("转换为" + collectionType.getType().getTypeName() + "类异常");
+            logger.error(builder.toString());
+            throw new JsonConvertException(var5);
         }
     }
 

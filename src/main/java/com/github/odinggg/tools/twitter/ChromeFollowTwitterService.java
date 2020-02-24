@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
+import java.net.URL;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
@@ -38,8 +39,15 @@ public class ChromeFollowTwitterService {
     static {
         String chromePath = new Object() {
             String getPath() {
-                return Objects.requireNonNull(this.getClass().getClassLoader().getResource("./lib/chromedriver.exe"))
-                        .getPath();
+                Logger logger = LoggerFactory.getLogger(this.getClass());
+                ClassLoader classLoader = this.getClass().getClassLoader();
+                URL resource = classLoader.getResource("./lib/chromedriver.exe");
+                if (resource != null) {
+                    logger.info("resource:{}", resource.getPath());
+                } else {
+                    logger.info("resource:{}", classLoader.getResource(""));
+                }
+                return "jlksjlakjlak";
             }
         }.getPath().substring(1);
         System.setProperty("webdriver.chrome.driver", chromePath);

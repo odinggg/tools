@@ -13,6 +13,10 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * 描述:
@@ -40,7 +44,11 @@ public class WebLogAspect {
         log.info("IP : " + request.getRemoteAddr());
         log.info("CLASS_METHOD : " + joinPoint.getSignature().getDeclaringTypeName() + "." + joinPoint.getSignature()
                 .getName());
-        log.info("ARGS:" + JacksonConvertUtil.objectToJson(joinPoint.getArgs()));
+        Object[] args = joinPoint.getArgs();
+        List<Object> collect = Stream.of(args)
+                .filter(o -> !(o instanceof HttpServletRequest || o instanceof HttpServletResponse))
+                .collect(Collectors.toList());
+        log.info("ARGS:" + JacksonConvertUtil.objectToJson(collect));
     }
 
     @AfterReturning(returning = "ret", pointcut = "webLog()")

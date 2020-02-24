@@ -1,4 +1,4 @@
-﻿package com.github.odinggg.tools;
+package com.github.odinggg.tools;
 
 import com.github.odinggg.tools.util.wechat.WXBizMsgCrypt;
 import org.w3c.dom.Document;
