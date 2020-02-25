@@ -14,4 +14,6 @@ public interface WeChatInterface {
     String checkLogin(String uuid);
 
     WeChatModel loginInit(WeChatModel.SecurityBean securityBean, CookieStore cookieStore);
+
+    WeChatModel memberInit(WeChatModel weChatModel);
 }

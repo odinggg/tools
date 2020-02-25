@@ -7,6 +7,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 /**
@@ -67,6 +68,384 @@ public class WeChatModel {
     private List<MPSubscribeMsgListBean> MPSubscribeMsgList;
     @JsonProperty("SecurityBean")
     private SecurityBean securityBean;
+    @JsonProperty("MemberCount")
+    private int MemberCount;
+    @JsonProperty("Seq")
+    private int Seq;
+    @JsonProperty("MemberList")
+    private List<WeChatMember.MemberListBean> MemberList;
+
+    public int getMemberCount() {
+        return MemberCount;
+    }
+
+    public void setMemberCount(int MemberCount) {
+        this.MemberCount = MemberCount;
+    }
+
+    public int getSeq() {
+        return Seq;
+    }
+
+    public void setSeq(int Seq) {
+        this.Seq = Seq;
+    }
+
+    public List<WeChatMember.MemberListBean> getMemberList() {
+        return MemberList;
+    }
+
+    public void setMemberList(List<WeChatMember.MemberListBean> MemberList) {
+        this.MemberList = MemberList;
+    }
+
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class MemberListBean {
+        /**
+         * Uin : 0
+         * UserName : @21e145a55443f6afd65b966dac0de934
+         * NickName : æ™“å½¬
+         * HeadImgUrl : /cgi-bin/mmwebwx-bin/webwxgeticon?seq=641588&username=@21e145a55443f6afd65b966dac0de934&skey=@crypt_a51bc2d6_9db2b7c2373534bd4507d821353cb51b
+         * ContactFlag : 3
+         * MemberCount : 0
+         * MemberList : []
+         * RemarkName : å°æ¯”
+         * HideInputBarFlag : 0
+         * Sex : 1
+         * Signature :
+         * VerifyFlag : 0
+         * OwnerUin : 0
+         * PYInitial : XB
+         * PYQuanPin : xiaobin
+         * RemarkPYInitial : XB
+         * RemarkPYQuanPin : xiaobi
+         * StarFriend : 0
+         * AppAccountFlag : 0
+         * Statues : 0
+         * AttrStatus : 99
+         * Province :
+         * City :
+         * Alias :
+         * SnsFlag : 0
+         * UniFriend : 0
+         * DisplayName :
+         * ChatRoomId : 0
+         * KeyWord : sun
+         * EncryChatRoomId :
+         * IsOwner : 0
+         */
+
+        @JsonProperty("Uin")
+        private int Uin;
+        @JsonProperty("UserName")
+        private String UserName;
+        @JsonProperty("NickName")
+        private String NickName;
+        @JsonProperty("HeadImgUrl")
+        private String HeadImgUrl;
+        @JsonProperty("ContactFlag")
+        private int ContactFlag;
+        @JsonProperty("MemberCount")
+        private int MemberCount;
+        @JsonProperty("RemarkName")
+        private String RemarkName;
+        @JsonProperty("HideInputBarFlag")
+        private int HideInputBarFlag;
+        @JsonProperty("Sex")
+        private int Sex;
+        @JsonProperty("Signature")
+        private String Signature;
+        @JsonProperty("VerifyFlag")
+        private int VerifyFlag;
+        @JsonProperty("OwnerUin")
+        private int OwnerUin;
+        @JsonProperty("PYInitial")
+        private String PYInitial;
+        @JsonProperty("PYQuanPin")
+        private String PYQuanPin;
+        @JsonProperty("RemarkPYInitial")
+        private String RemarkPYInitial;
+        @JsonProperty("RemarkPYQuanPin")
+        private String RemarkPYQuanPin;
+        @JsonProperty("StarFriend")
+        private int StarFriend;
+        @JsonProperty("AppAccountFlag")
+        private int AppAccountFlag;
+        @JsonProperty("Statues")
+        private int Statues;
+        @JsonProperty("AttrStatus")
+        private int AttrStatus;
+        @JsonProperty("Province")
+        private String Province;
+        @JsonProperty("City")
+        private String City;
+        @JsonProperty("Alias")
+        private String Alias;
+        @JsonProperty("SnsFlag")
+        private int SnsFlag;
+        @JsonProperty("UniFriend")
+        private int UniFriend;
+        @JsonProperty("DisplayName")
+        private String DisplayName;
+        @JsonProperty("ChatRoomId")
+        private int ChatRoomId;
+        @JsonProperty("KeyWord")
+        private String KeyWord;
+        @JsonProperty("EncryChatRoomId")
+        private String EncryChatRoomId;
+        @JsonProperty("IsOwner")
+        private int IsOwner;
+        @JsonProperty("MemberList")
+        private List<?> MemberList;
+
+        public int getUin() {
+            return Uin;
+        }
+
+        public void setUin(int Uin) {
+            this.Uin = Uin;
+        }
+
+        public String getUserName() {
+            return UserName;
+        }
+
+        public void setUserName(String UserName) {
+            this.UserName = UserName;
+        }
+
+        public String getNickName() {
+            return NickName;
+        }
+
+        public void setNickName(String NickName) {
+            this.NickName = NickName;
+        }
+
+        public String getHeadImgUrl() {
+            return HeadImgUrl;
+        }
+
+        public void setHeadImgUrl(String HeadImgUrl) {
+            this.HeadImgUrl = HeadImgUrl;
+        }
+
+        public int getContactFlag() {
+            return ContactFlag;
+        }
+
+        public void setContactFlag(int ContactFlag) {
+            this.ContactFlag = ContactFlag;
+        }
+
+        public int getMemberCount() {
+            return MemberCount;
+        }
+
+        public void setMemberCount(int MemberCount) {
+            this.MemberCount = MemberCount;
+        }
+
+        public String getRemarkName() {
+            return RemarkName;
+        }
+
+        public void setRemarkName(String RemarkName) {
+            this.RemarkName = RemarkName;
+        }
+
+        public int getHideInputBarFlag() {
+            return HideInputBarFlag;
+        }
+
+        public void setHideInputBarFlag(int HideInputBarFlag) {
+            this.HideInputBarFlag = HideInputBarFlag;
+        }
+
+        public int getSex() {
+            return Sex;
+        }
+
+        public void setSex(int Sex) {
+            this.Sex = Sex;
+        }
+
+        public String getSignature() {
+            return Signature;
+        }
+
+        public void setSignature(String Signature) {
+            this.Signature = Signature;
+        }
+
+        public int getVerifyFlag() {
+            return VerifyFlag;
+        }
+
+        public void setVerifyFlag(int VerifyFlag) {
+            this.VerifyFlag = VerifyFlag;
+        }
+
+        public int getOwnerUin() {
+            return OwnerUin;
+        }
+
+        public void setOwnerUin(int OwnerUin) {
+            this.OwnerUin = OwnerUin;
+        }
+
+        public String getPYInitial() {
+            return PYInitial;
+        }
+
+        public void setPYInitial(String PYInitial) {
+            this.PYInitial = PYInitial;
+        }
+
+        public String getPYQuanPin() {
+            return PYQuanPin;
+        }
+
+        public void setPYQuanPin(String PYQuanPin) {
+            this.PYQuanPin = PYQuanPin;
+        }
+
+        public String getRemarkPYInitial() {
+            return RemarkPYInitial;
+        }
+
+        public void setRemarkPYInitial(String RemarkPYInitial) {
+            this.RemarkPYInitial = RemarkPYInitial;
+        }
+
+        public String getRemarkPYQuanPin() {
+            return RemarkPYQuanPin;
+        }
+
+        public void setRemarkPYQuanPin(String RemarkPYQuanPin) {
+            this.RemarkPYQuanPin = RemarkPYQuanPin;
+        }
+
+        public int getStarFriend() {
+            return StarFriend;
+        }
+
+        public void setStarFriend(int StarFriend) {
+            this.StarFriend = StarFriend;
+        }
+
+        public int getAppAccountFlag() {
+            return AppAccountFlag;
+        }
+
+        public void setAppAccountFlag(int AppAccountFlag) {
+            this.AppAccountFlag = AppAccountFlag;
+        }
+
+        public int getStatues() {
+            return Statues;
+        }
+
+        public void setStatues(int Statues) {
+            this.Statues = Statues;
+        }
+
+        public int getAttrStatus() {
+            return AttrStatus;
+        }
+
+        public void setAttrStatus(int AttrStatus) {
+            this.AttrStatus = AttrStatus;
+        }
+
+        public String getProvince() {
+            return Province;
+        }
+
+        public void setProvince(String Province) {
+            this.Province = Province;
+        }
+
+        public String getCity() {
+            return City;
+        }
+
+        public void setCity(String City) {
+            this.City = City;
+        }
+
+        public String getAlias() {
+            return Alias;
+        }
+
+        public void setAlias(String Alias) {
+            this.Alias = Alias;
+        }
+
+        public int getSnsFlag() {
+            return SnsFlag;
+        }
+
+        public void setSnsFlag(int SnsFlag) {
+            this.SnsFlag = SnsFlag;
+        }
+
+        public int getUniFriend() {
+            return UniFriend;
+        }
+
+        public void setUniFriend(int UniFriend) {
+            this.UniFriend = UniFriend;
+        }
+
+        public String getDisplayName() {
+            return DisplayName;
+        }
+
+        public void setDisplayName(String DisplayName) {
+            this.DisplayName = DisplayName;
+        }
+
+        public int getChatRoomId() {
+            return ChatRoomId;
+        }
+
+        public void setChatRoomId(int ChatRoomId) {
+            this.ChatRoomId = ChatRoomId;
+        }
+
+        public String getKeyWord() {
+            return KeyWord;
+        }
+
+        public void setKeyWord(String KeyWord) {
+            this.KeyWord = KeyWord;
+        }
+
+        public String getEncryChatRoomId() {
+            return EncryChatRoomId;
+        }
+
+        public void setEncryChatRoomId(String EncryChatRoomId) {
+            this.EncryChatRoomId = EncryChatRoomId;
+        }
+
+        public int getIsOwner() {
+            return IsOwner;
+        }
+
+        public void setIsOwner(int IsOwner) {
+            this.IsOwner = IsOwner;
+        }
+
+        public List<?> getMemberList() {
+            return MemberList;
+        }
+
+        public void setMemberList(List<?> MemberList) {
+            this.MemberList = MemberList;
+        }
+    }
 
     public SecurityBean getSecurityBean() {
         return securityBean;
@@ -78,6 +457,10 @@ public class WeChatModel {
 
     public BaseResponseBean getBaseResponse() {
         return BaseResponse;
+    }
+
+    public String getDeviceId() {
+        return "e" + String.valueOf(new Random().nextLong()).substring(1, 16);
     }
 
     public void setBaseResponse(BaseResponseBean BaseResponse) {

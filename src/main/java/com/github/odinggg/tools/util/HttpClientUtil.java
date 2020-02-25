@@ -571,4 +571,13 @@ public class HttpClientUtil {
     public static String get(BasicCookieStore basicCookieStore, String url) {
         return get(basicCookieStore, 10000, 10000, url, null);
     }
+
+    public static String sendAndFormatResponse(BasicCookieStore basicCookieStore, int connectTimeout, int readTimeout, String url, RequestMethod type, Object data, Map<String, String> params, Map<String, String> headers, boolean isJson, String mimeType) {
+        config = RequestConfig.custom()
+                .setSocketTimeout(readTimeout)
+                .setConnectTimeout(connectTimeout)
+                .setConnectionRequestTimeout(2000)
+                .build();
+        return sendAndFormatResponse(basicCookieStore, url, type, data, params, headers, isJson, mimeType);
+    }
 }

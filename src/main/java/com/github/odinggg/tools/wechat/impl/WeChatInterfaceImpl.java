@@ -13,6 +13,7 @@ import org.apache.http.HttpEntity;
 import org.apache.http.client.CookieStore;
 import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.client.BasicCookieStore;
+import org.apache.http.impl.cookie.BasicClientCookie;
 import org.aspectj.util.FileUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,7 +52,7 @@ public class WeChatInterfaceImpl implements WeChatInterface {
             map.put("appid", "wx782c26e4c19acffb");
             map.put("fun", "new");
             map.put("land", "zh_CN");
-            String responseString = HttpClientUtil.get(WeChatConstant.prefix + WeChatConstant.uuidUrl, map);
+            String responseString = HttpClientUtil.get(WeChatConstant.login_prefix + WeChatConstant.uuidUrl, map);
             if (responseString.contains("uuid")) {
                 int uuidIndex = responseString.indexOf("uuid");
                 String substring = responseString.substring(uuidIndex);
@@ -68,7 +69,7 @@ public class WeChatInterfaceImpl implements WeChatInterface {
         try {
             HashMap<String, String> map = new HashMap<>();
             map.put("t", "webwx");
-            HttpEntity entity = HttpClientUtil.getEntity(WeChatConstant.prefix + WeChatConstant.qrcode + uuid, map);
+            HttpEntity entity = HttpClientUtil.getEntity(WeChatConstant.login_prefix + WeChatConstant.qrcode + uuid, map);
             if (entity != null && MediaType.IMAGE_JPEG_VALUE.equals(entity.getContentType().getValue())) {
                 InputStream content = entity.getContent();
                 byte[] bytes = FileUtil.readAsByteArray(content);
@@ -86,7 +87,7 @@ public class WeChatInterfaceImpl implements WeChatInterface {
             HashMap<String, String> map = new HashMap<>();
             map.put("tip", "1");
             map.put("uuid", uuid);
-            String s = HttpClientUtil.get(1800000, 1800000, WeChatConstant.prefix + WeChatConstant.check_login, map);
+            String s = HttpClientUtil.get(1800000, 1800000, WeChatConstant.login_prefix + WeChatConstant.check_login, map);
             if (s.contains("code")) {
                 Properties properties = new Properties();
                 properties.load(new StringReader(s));
@@ -113,6 +114,7 @@ public class WeChatInterfaceImpl implements WeChatInterface {
                         if (weChatModel == null) {
                             return "";
                         }
+                        weChatModel = memberInit(weChatModel);
                         // 存放用户信息
                         WeChatController.MAP.putIfAbsent(uuid, weChatModel);
                         // 启动异步获取消息线程
@@ -128,6 +130,31 @@ public class WeChatInterfaceImpl implements WeChatInterface {
         return null;
     }
 
+    public WeChatModel memberInit(WeChatModel weChatModel) {
+        WeChatModel.SecurityBean securityBean = weChatModel.getSecurityBean();
+        HashMap<String, String> params = new HashMap<>();
+        params.put("pass_ticket", securityBean.getPassTicket());
+        params.put("skey", securityBean.getSkey());
+        BasicCookieStore basicCookieStore = new BasicCookieStore();
+        basicCookieStore.addCookie(new BasicClientCookie("webwx_data_ticket", securityBean.getWebwxDataTicket()));
+        basicCookieStore.addCookie(new BasicClientCookie("webwx_auth_ticket", securityBean.getWebwxAuthTicket()));
+        WeChatInitRequest weChatInitRequest = new WeChatInitRequest();
+        WeChatInitRequest.BaseRequestBean baseRequestBean = new WeChatInitRequest.BaseRequestBean();
+        baseRequestBean.setUin(securityBean.getWxuin());
+        baseRequestBean.setSid(securityBean.getWxsid());
+        baseRequestBean.setSkey(securityBean.getSkey());
+        baseRequestBean.setDeviceID(weChatModel.getDeviceId());
+        weChatInitRequest.setBaseRequest(baseRequestBean);
+        String response = HttpClientUtil.sendAndFormatResponse(basicCookieStore, WeChatConstant.prefix + WeChatConstant.memeber_init, RequestMethod.POST, weChatInitRequest, params, null, true, null);
+        if (StringUtils.isEmpty(response) || !response.contains("MemberList")) {
+            return weChatModel;
+        }
+        WeChatModel model = JacksonConvertUtil.jsonToObject(response, WeChatModel.class);
+        weChatModel.setMemberCount(model.getMemberCount());
+        weChatModel.setMemberList(model.getMemberList());
+        return weChatModel;
+    }
+
     @Override
     public WeChatModel loginInit(WeChatModel.SecurityBean securityBean, CookieStore cookieStore) {
         HashMap<String, String> map = new HashMap<>();
@@ -140,7 +167,7 @@ public class WeChatInterfaceImpl implements WeChatInterface {
         baseRequestBean.setDeviceID("e" + String.valueOf(new Random().nextLong()).substring(1, 16));
         weChatInitRequest.setBaseRequest(baseRequestBean);
         securityBean.setDeviceId(baseRequestBean.getDeviceID());
-        String response = HttpClientUtil.sendAndFormatResponse(cookieStore, WeChatConstant.prefix + WeChatConstant.init, RequestMethod.POST, weChatInitRequest, map, null, true, null);
+        String response = HttpClientUtil.sendAndFormatResponse(cookieStore, WeChatConstant.prefix + WeChatConstant.login_init, RequestMethod.POST, weChatInitRequest, map, null, true, null);
         if (StringUtils.isEmpty(response) || !response.contains("BaseResponse")) {
             return null;
         }
