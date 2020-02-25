@@ -52,7 +52,7 @@ public class Aria2Util {
             }
             objects.add(headers);
             aria2Request.setParams(objects);
-            String response = HttpClientUtil.send("http://localhost:6800/jsonrpc", RequestMethod.POST, aria2Request, null, true);
+            String response = HttpClientUtil.sendAndFormatResponse("http://localhost:6800/jsonrpc", RequestMethod.POST, aria2Request, null, true);
             return JacksonConvertUtil.jsonToObject(response, Aria2Request.class);
         } catch (Exception e) {
             LOGGER.error("aria2添加下载异常：", e);
@@ -82,7 +82,7 @@ public class Aria2Util {
             }
             objects.add(headers);
             aria2Request.setParams(objects);
-            String response = HttpClientUtil.send("http://localhost:6800/jsonrpc", RequestMethod.POST, aria2Request, null, true);
+            String response = HttpClientUtil.sendAndFormatResponse("http://localhost:6800/jsonrpc", RequestMethod.POST, aria2Request, null, true);
             return JacksonConvertUtil.jsonToObject(response, Aria2Request.class);
         } catch (Exception e) {
             LOGGER.error("aria2添加下载异常：", e);
@@ -99,7 +99,7 @@ public class Aria2Util {
             ArrayList<Object> objects = new ArrayList<>();
             objects.add(gid);
             aria2Request.setParams(objects);
-            String response = HttpClientUtil.send("http://localhost:6800/jsonrpc", RequestMethod.POST, aria2Request, null, true);
+            String response = HttpClientUtil.sendAndFormatResponse("http://localhost:6800/jsonrpc", RequestMethod.POST, aria2Request, null, true);
             return JacksonConvertUtil.jsonToObject(response, Aria2StatusResponse.class);
         } catch (Exception e) {
             LOGGER.error("aria2添加下载异常：", e);

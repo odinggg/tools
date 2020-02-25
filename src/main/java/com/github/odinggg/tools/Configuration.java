@@ -11,7 +11,7 @@ import java.util.Map;
  * 描述:
  * 配置类
  *
- * @author QinHaoChun
+ * @author Hansen
  * @version 2019-10-21 20:19
  */
 @Component

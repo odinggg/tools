@@ -42,7 +42,7 @@ public class WorkWeChatInterfaceImpl implements WorkWeChatInterface {
         }
         params.clear();
         params.put("access_token", workWeChatResponse.getAccessToken());
-        String send = HttpClientUtil.send(sendParam.getUrl(), RequestMethod.POST, workWeChatMessage, params, null, true);
+        String send = HttpClientUtil.sendAndFormatResponse(sendParam.getUrl(), RequestMethod.POST, workWeChatMessage, params, null, true);
         return JacksonConvertUtil.jsonToObject(send, WorkWeChatResponse.class);
     }
 

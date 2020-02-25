@@ -2,24 +2,36 @@ package com.github.odinggg.tools.controller;
 
 import com.github.odinggg.tools.Configuration;
 import com.github.odinggg.tools.enums.HttpParamEnum;
+import com.github.odinggg.tools.model.APIEntity;
+import com.github.odinggg.tools.model.WeChatModel;
 import com.github.odinggg.tools.model.WorkWeChatMessageXML;
 import com.github.odinggg.tools.util.JacksonConvertUtil;
 import com.github.odinggg.tools.util.wechat.WXBizMsgCrypt;
+import com.github.odinggg.tools.wechat.WeChatInterface;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.nio.ByteBuffer;
+import java.util.Base64;
+import java.util.concurrent.ConcurrentHashMap;
 
 @RestController
 public class WeChatController extends BaseController {
     private Logger logger = LoggerFactory.getLogger(WeChatController.class);
     @Autowired
     private Configuration configuration;
+    @Autowired
+    private WeChatInterface weChatInterface;
+
+    public static final ConcurrentHashMap<String, WeChatModel> MAP = new ConcurrentHashMap<>();
 
     /**
      * wechat check
@@ -75,5 +87,35 @@ public class WeChatController extends BaseController {
             logger.error("微信校验异常：", e);
         }
         return "";
+    }
+
+    @GetMapping("/wxQrcode")
+    public Object getQrcode() {
+        try {
+            String uuid = weChatInterface.getUuid();
+            if (StringUtils.isEmpty(uuid)) {
+                return new APIEntity<>(200, "get qrcode uuid false");
+            }
+            ByteBuffer qrcode = weChatInterface.getQrcode(uuid);
+            if (qrcode == null) {
+                return new APIEntity<>(200, "get qrcode image false");
+            }
+            return new APIEntity<>(200, "success", new WeChatModel.SecurityBean(uuid, Base64.getEncoder()
+                    .encodeToString(qrcode.array())));
+        } catch (Exception e) {
+            logger.error("微信获取二维码异常：", e);
+            return new APIEntity<>(109, "system error");
+        }
+    }
+
+    @GetMapping("/checkLogin/{uuid}")
+    public Object checkLogin(@PathVariable String uuid) {
+        try {
+            String s = weChatInterface.checkLogin(uuid);
+            return new APIEntity<>(200,"success",s);
+        } catch (Exception e) {
+            logger.error("微信获取二维码异常：", e);
+            return new APIEntity<>(109, "system error");
+        }
     }
 }

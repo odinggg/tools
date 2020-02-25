@@ -28,7 +28,7 @@ import java.util.Map;
 /**
  * 描述:
  *
- * @outhor QinHaoChun
+ * @outhor Hansen
  * @create 2018-08-29 15:46
  */
 public final class JacksonConvertUtil {

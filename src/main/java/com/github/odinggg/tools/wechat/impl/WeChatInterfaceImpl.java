@@ -1,0 +1,151 @@
+package com.github.odinggg.tools.wechat.impl;
+
+import com.github.odinggg.tools.constant.WeChatConstant;
+import com.github.odinggg.tools.controller.WeChatController;
+import com.github.odinggg.tools.model.WeChatInitRequest;
+import com.github.odinggg.tools.model.WeChatModel;
+import com.github.odinggg.tools.tasks.WeChatMessageListenTask;
+import com.github.odinggg.tools.util.HttpClientUtil;
+import com.github.odinggg.tools.util.JacksonConvertUtil;
+import com.github.odinggg.tools.util.SpringBeansUtil;
+import com.github.odinggg.tools.wechat.WeChatInterface;
+import org.apache.http.HttpEntity;
+import org.apache.http.client.CookieStore;
+import org.apache.http.cookie.Cookie;
+import org.apache.http.impl.client.BasicCookieStore;
+import org.aspectj.util.FileUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.MediaType;
+import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.RequestMethod;
+
+import java.io.InputStream;
+import java.io.StringReader;
+import java.nio.ByteBuffer;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Properties;
+import java.util.Random;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+/**
+ * 描述:
+ *
+ * @author Hansen
+ * @version 2020-02-25 12:44
+ */
+@Service
+public class WeChatInterfaceImpl implements WeChatInterface {
+    private final Logger logger = LoggerFactory.getLogger(WeChatInterfaceImpl.class);
+
+    private ExecutorService executorService = Executors.newFixedThreadPool(4);
+
+    @Override
+    public String getUuid() {
+        try {
+            HashMap<String, String> map = new HashMap<>();
+            map.put("appid", "wx782c26e4c19acffb");
+            map.put("fun", "new");
+            map.put("land", "zh_CN");
+            String responseString = HttpClientUtil.get(WeChatConstant.prefix + WeChatConstant.uuidUrl, map);
+            if (responseString.contains("uuid")) {
+                int uuidIndex = responseString.indexOf("uuid");
+                String substring = responseString.substring(uuidIndex);
+                return substring.substring(substring.indexOf("\"") + 1, substring.lastIndexOf("\""));
+            }
+        } catch (Exception e) {
+            logger.error("获取uuid异常：", e);
+        }
+        return null;
+    }
+
+    @Override
+    public ByteBuffer getQrcode(String uuid) {
+        try {
+            HashMap<String, String> map = new HashMap<>();
+            map.put("t", "webwx");
+            HttpEntity entity = HttpClientUtil.getEntity(WeChatConstant.prefix + WeChatConstant.qrcode + uuid, map);
+            if (entity != null && MediaType.IMAGE_JPEG_VALUE.equals(entity.getContentType().getValue())) {
+                InputStream content = entity.getContent();
+                byte[] bytes = FileUtil.readAsByteArray(content);
+                return ByteBuffer.wrap(bytes);
+            }
+        } catch (Exception e) {
+            logger.error("获取二维码异常：", e);
+        }
+        return null;
+    }
+
+    @Override
+    public String checkLogin(String uuid) {
+        try {
+            HashMap<String, String> map = new HashMap<>();
+            map.put("tip", "1");
+            map.put("uuid", uuid);
+            String s = HttpClientUtil.get(1800000, 1800000, WeChatConstant.prefix + WeChatConstant.check_login, map);
+            if (s.contains("code")) {
+                Properties properties = new Properties();
+                properties.load(new StringReader(s));
+                String code = properties.getProperty("window.code");
+                if (!StringUtils.isEmpty(code) && code.startsWith("200")) {
+                    // 进入登录逻辑
+                    BasicCookieStore basicCookieStore = new BasicCookieStore();
+                    String uri = properties.getProperty("window.redirect_uri").replaceAll("\"", "").replaceAll(";", "");
+                    String loginResponse = HttpClientUtil.get(basicCookieStore, uri);
+                    if (loginResponse.startsWith("<")) {
+                        WeChatModel.SecurityBean securityBean = JacksonConvertUtil.xmlToObject(loginResponse, WeChatModel.SecurityBean.class);
+                        List<Cookie> cookies = basicCookieStore.getCookies();
+                        if (!CollectionUtils.isEmpty(cookies)) {
+                            cookies.stream()
+                                    .filter(cookie -> cookie.getName().equalsIgnoreCase("webwx_data_ticket"))
+                                    .findAny()
+                                    .ifPresent(cookie -> securityBean.setWebwxAuthTicket(cookie.getValue()));
+                            cookies.stream()
+                                    .filter(cookie -> cookie.getName().equalsIgnoreCase("webwx_auth_ticket"))
+                                    .findAny()
+                                    .ifPresent(cookie -> securityBean.setWebwxAuthTicket(cookie.getValue()));
+                        }
+                        WeChatModel weChatModel = loginInit(securityBean, basicCookieStore);
+                        if (weChatModel == null) {
+                            return "";
+                        }
+                        // 存放用户信息
+                        WeChatController.MAP.putIfAbsent(uuid, weChatModel);
+                        // 启动异步获取消息线程
+                        executorService.execute(SpringBeansUtil.getBean(WeChatMessageListenTask.class)
+                                .setWeChatModel(weChatModel));
+                        return "success";
+                    }
+                }
+            }
+        } catch (Exception e) {
+            logger.error("获取二维码异常：", e);
+        }
+        return null;
+    }
+
+    @Override
+    public WeChatModel loginInit(WeChatModel.SecurityBean securityBean, CookieStore cookieStore) {
+        HashMap<String, String> map = new HashMap<>();
+        map.put("pass_ticket", securityBean.getPassTicket());
+        WeChatInitRequest weChatInitRequest = new WeChatInitRequest();
+        WeChatInitRequest.BaseRequestBean baseRequestBean = new WeChatInitRequest.BaseRequestBean();
+        baseRequestBean.setUin(securityBean.getWxuin());
+        baseRequestBean.setSid(securityBean.getWxsid());
+        baseRequestBean.setSkey(securityBean.getSkey());
+        baseRequestBean.setDeviceID("e" + String.valueOf(new Random().nextLong()).substring(1, 16));
+        weChatInitRequest.setBaseRequest(baseRequestBean);
+        securityBean.setDeviceId(baseRequestBean.getDeviceID());
+        String response = HttpClientUtil.sendAndFormatResponse(cookieStore, WeChatConstant.prefix + WeChatConstant.init, RequestMethod.POST, weChatInitRequest, map, null, true, null);
+        if (StringUtils.isEmpty(response) || !response.contains("BaseResponse")) {
+            return null;
+        }
+        WeChatModel weChatModel = JacksonConvertUtil.jsonToObject(response, WeChatModel.class);
+        weChatModel.setSecurityBean(securityBean);
+        return weChatModel;
+    }
+}
