@@ -3,7 +3,12 @@ package com.github.odinggg.tools.wechat.impl;
 import com.github.odinggg.tools.constant.WeChatConstant;
 import com.github.odinggg.tools.controller.WeChatController;
 import com.github.odinggg.tools.model.WeChatInitRequest;
+import com.github.odinggg.tools.model.WeChatMember;
+import com.github.odinggg.tools.model.WeChatMessageModel;
+
+import com.github.odinggg.tools.model.WeChatMessageRequest;
 import com.github.odinggg.tools.model.WeChatModel;
+import com.github.odinggg.tools.model.WorkWeChatMessageFormatModel;
 import com.github.odinggg.tools.tasks.WeChatMessageListenTask;
 import com.github.odinggg.tools.util.HttpClientUtil;
 import com.github.odinggg.tools.util.JacksonConvertUtil;
@@ -153,6 +158,50 @@ public class WeChatInterfaceImpl implements WeChatInterface {
         weChatModel.setMemberCount(model.getMemberCount());
         weChatModel.setMemberList(model.getMemberList());
         return weChatModel;
+    }
+
+    @Override
+    public WeChatMessageModel getMessage(WeChatModel weChatModel) {
+        WeChatModel.SecurityBean securityBean = weChatModel.getSecurityBean();
+        BasicCookieStore basicCookieStore = new BasicCookieStore();
+        basicCookieStore.addCookie(new BasicClientCookie("webwx_data_ticket", securityBean.getWebwxDataTicket()));
+        basicCookieStore.addCookie(new BasicClientCookie("webwx_auth_ticket", securityBean.getWebwxAuthTicket()));
+        HashMap<String, String> params = new HashMap<>();
+        params.put("sid", securityBean.getWxsid());
+        params.put("skey", securityBean.getSkey());
+        params.put("uin", securityBean.getWxuin());
+        WeChatMessageRequest weChatMessageRequest = new WeChatMessageRequest();
+        WeChatMessageRequest.BaseRequestBean baseRequestBean = new WeChatMessageRequest.BaseRequestBean();
+        baseRequestBean.setUin(Long.parseLong(securityBean.getWxuin()));
+        baseRequestBean.setSid(securityBean.getWxsid());
+        baseRequestBean.setSkey(securityBean.getSkey());
+        baseRequestBean.setDeviceID(weChatModel.getDeviceId());
+        weChatMessageRequest.setBaseRequest(baseRequestBean);
+        weChatMessageRequest.setSyncKey(weChatModel.getSyncKey());
+        String response = HttpClientUtil.sendAndFormatResponse(basicCookieStore, WeChatConstant.prefix + WeChatConstant.get_message, RequestMethod.POST, weChatMessageRequest, params, null, true, null);
+        if (StringUtils.isEmpty(response) || !response.contains("BaseResponse")) {
+            return null;
+        }
+        return JacksonConvertUtil.jsonToObject(response, WeChatMessageModel.class);
+    }
+
+    @Override
+    public String formatMessage(WeChatMessageModel.AddMsgListBean weChatMessageModel, WeChatModel weChatModel) {
+        List<WeChatMember.MemberListBean> memberList = weChatModel.getMemberList();
+        if (!CollectionUtils.isEmpty(memberList)) {
+            WorkWeChatMessageFormatModel workWeChatMessageFormatModel = new WorkWeChatMessageFormatModel();
+            workWeChatMessageFormatModel.setContent(weChatMessageModel.getContent());
+            memberList.stream()
+                    .filter(memberListBean -> memberListBean.getUserName().equals(weChatMessageModel.getFromUserName()))
+                    .findAny()
+                    .ifPresent(memberListBean -> {
+                        workWeChatMessageFormatModel.setName(memberListBean.getNickName());
+                        workWeChatMessageFormatModel.setRemarkName(memberListBean.getRemarkName());
+                        workWeChatMessageFormatModel.setWeChatName(memberListBean.getUserName());
+                    });
+            return workWeChatMessageFormatModel.toString();
+        }
+        return "";
     }
 
     @Override
