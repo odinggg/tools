@@ -5,7 +5,6 @@ import com.github.odinggg.tools.controller.WeChatController;
 import com.github.odinggg.tools.model.WeChatInitRequest;
 import com.github.odinggg.tools.model.WeChatMember;
 import com.github.odinggg.tools.model.WeChatMessageModel;
-
 import com.github.odinggg.tools.model.WeChatMessageRequest;
 import com.github.odinggg.tools.model.WeChatModel;
 import com.github.odinggg.tools.model.WorkWeChatMessageFormatModel;
@@ -127,6 +126,8 @@ public class WeChatInterfaceImpl implements WeChatInterface {
                                 .setWeChatModel(weChatModel));
                         return "success";
                     }
+                } else if (!StringUtils.isEmpty(code) && code.startsWith("408") || code.startsWith("201")) {
+                    checkLogin(uuid);
                 }
             }
         } catch (Exception e) {
