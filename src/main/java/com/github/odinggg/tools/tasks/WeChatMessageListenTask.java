@@ -77,7 +77,7 @@ public class WeChatMessageListenTask implements Runnable {
                 String selector = String.valueOf(stringObjectMap.get("selector"));
                 if (Integer.parseInt(selector) > 0) {
                     // 有新消息获取信息内容
-                    WeChatMessageModel weChatMessageModel = weChatInterface.getMessage(weChatModel);
+                    WeChatMessageModel weChatMessageModel = weChatInterface.getMessage(weChatModel, basicCookieStore);
                     if (weChatMessageModel.getAddMsgCount() > 0 && !CollectionUtils.isEmpty(weChatMessageModel.getAddMsgList())) {
                         List<WeChatMessageModel.AddMsgListBean> addMsgList = weChatMessageModel.getAddMsgList();
                         addMsgList.forEach(addMsgListBean -> {

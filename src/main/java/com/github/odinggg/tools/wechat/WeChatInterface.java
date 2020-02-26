@@ -3,7 +3,7 @@ package com.github.odinggg.tools.wechat;
 import com.github.odinggg.tools.model.WeChatMessageModel;
 import com.github.odinggg.tools.model.WeChatModel;
 import org.apache.http.client.CookieStore;
-
+import org.apache.http.impl.client.BasicCookieStore;
 
 import java.nio.ByteBuffer;
 
@@ -18,7 +18,7 @@ public interface WeChatInterface {
 
     WeChatModel memberInit(WeChatModel weChatModel);
 
-    WeChatMessageModel getMessage(WeChatModel weChatModel);
+    WeChatMessageModel getMessage(WeChatModel weChatModel, BasicCookieStore basicCookieStore);
 
     String formatMessage(WeChatMessageModel.AddMsgListBean weChatMessageModel, WeChatModel weChatModel);
 }

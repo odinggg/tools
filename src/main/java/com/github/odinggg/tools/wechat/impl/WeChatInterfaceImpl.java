@@ -162,11 +162,8 @@ public class WeChatInterfaceImpl implements WeChatInterface {
     }
 
     @Override
-    public WeChatMessageModel getMessage(WeChatModel weChatModel) {
+    public WeChatMessageModel getMessage(WeChatModel weChatModel, BasicCookieStore basicCookieStore) {
         WeChatModel.SecurityBean securityBean = weChatModel.getSecurityBean();
-        BasicCookieStore basicCookieStore = new BasicCookieStore();
-//        basicCookieStore.addCookie(new BasicClientCookie("webwx_data_ticket", securityBean.getWebwxDataTicket()));
-//        basicCookieStore.addCookie(new BasicClientCookie("webwx_auth_ticket", securityBean.getWebwxAuthTicket()));
         HashMap<String, String> params = new HashMap<>();
         params.put("sid", securityBean.getWxsid());
         params.put("skey", securityBean.getSkey());
