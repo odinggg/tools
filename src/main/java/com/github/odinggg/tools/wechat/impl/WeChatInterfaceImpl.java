@@ -100,8 +100,8 @@ public class WeChatInterfaceImpl implements WeChatInterface {
                     // 进入登录逻辑
                     BasicCookieStore basicCookieStore = new BasicCookieStore();
                     String uri = properties.getProperty("window.redirect_uri").replaceAll("\"", "").replaceAll(";", "");
-                    String loginResponse = HttpClientUtil.get(basicCookieStore, uri);
-                    if (loginResponse.startsWith("<")) {
+                    String loginResponse = HttpClientUtil.get(basicCookieStore, uri + "&fun=new&version=v2");
+                    if (loginResponse.startsWith("<error")) {
                         WeChatModel.SecurityBean securityBean = JacksonConvertUtil.xmlToObject(loginResponse, WeChatModel.SecurityBean.class);
                         List<Cookie> cookies = basicCookieStore.getCookies();
                         if (!CollectionUtils.isEmpty(cookies)) {
@@ -123,7 +123,7 @@ public class WeChatInterfaceImpl implements WeChatInterface {
                         WeChatController.MAP.putIfAbsent(uuid, weChatModel);
                         // 启动异步获取消息线程
                         executorService.execute(SpringBeansUtil.getBean(WeChatMessageListenTask.class)
-                                .setWeChatModel(weChatModel));
+                                .setWeChatModel(weChatModel).setBasicCookieStore(basicCookieStore));
                         return "success";
                     }
                 } else if (!StringUtils.isEmpty(code) && code.startsWith("408") || code.startsWith("201")) {
@@ -155,9 +155,9 @@ public class WeChatInterfaceImpl implements WeChatInterface {
         if (StringUtils.isEmpty(response) || !response.contains("MemberList")) {
             return weChatModel;
         }
-        WeChatModel model = JacksonConvertUtil.jsonToObject(response, WeChatModel.class);
-        weChatModel.setMemberCount(model.getMemberCount());
-        weChatModel.setMemberList(model.getMemberList());
+        WeChatMember weChatMember = JacksonConvertUtil.jsonToObject(response, WeChatMember.class);
+        weChatModel.setMemberCount(weChatMember.getMemberCount());
+        weChatModel.setMemberList(weChatMember.getMemberList());
         return weChatModel;
     }
 
@@ -165,8 +165,8 @@ public class WeChatInterfaceImpl implements WeChatInterface {
     public WeChatMessageModel getMessage(WeChatModel weChatModel) {
         WeChatModel.SecurityBean securityBean = weChatModel.getSecurityBean();
         BasicCookieStore basicCookieStore = new BasicCookieStore();
-        basicCookieStore.addCookie(new BasicClientCookie("webwx_data_ticket", securityBean.getWebwxDataTicket()));
-        basicCookieStore.addCookie(new BasicClientCookie("webwx_auth_ticket", securityBean.getWebwxAuthTicket()));
+//        basicCookieStore.addCookie(new BasicClientCookie("webwx_data_ticket", securityBean.getWebwxDataTicket()));
+//        basicCookieStore.addCookie(new BasicClientCookie("webwx_auth_ticket", securityBean.getWebwxAuthTicket()));
         HashMap<String, String> params = new HashMap<>();
         params.put("sid", securityBean.getWxsid());
         params.put("skey", securityBean.getSkey());

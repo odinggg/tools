@@ -168,7 +168,7 @@ public final class JacksonConvertUtil {
     }
 
     public static <T> T jsonToObject(String jsonStringData, TypeReference<T> collectionType) throws JsonConvertException {
-        ObjectMapper mapper = new ObjectMapper();
+        ObjectMapper mapper = getObjectMapper();
         try {
             return mapper.readValue(jsonStringData, collectionType);
         } catch (IOException var5) {

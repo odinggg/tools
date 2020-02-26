@@ -41,7 +41,7 @@ public class WeChatModel {
     @JsonProperty("BaseResponse")
     private BaseResponseBean BaseResponse;
     @JsonProperty("Count")
-    private int Count;
+    private Long Count;
     @JsonProperty("SyncKey")
     private SyncKeyBean SyncKey;
     @JsonProperty("User")
@@ -51,17 +51,17 @@ public class WeChatModel {
     @JsonProperty("SKey")
     private String SKey;
     @JsonProperty("ClientVersion")
-    private int ClientVersion;
+    private Long ClientVersion;
     @JsonProperty("SystemTime")
-    private int SystemTime;
+    private Long SystemTime;
     @JsonProperty("GrayScale")
-    private int GrayScale;
+    private Long GrayScale;
     @JsonProperty("InviteStartCount")
-    private int InviteStartCount;
+    private Long InviteStartCount;
     @JsonProperty("MPSubscribeMsgCount")
-    private int MPSubscribeMsgCount;
+    private Long MPSubscribeMsgCount;
     @JsonProperty("ClickReportInterval")
-    private int ClickReportInterval;
+    private Long ClickReportInterval;
     @JsonProperty("ContactList")
     private List<ContactListBean> ContactList;
     @JsonProperty("MPSubscribeMsgList")
@@ -69,25 +69,25 @@ public class WeChatModel {
     @JsonProperty("SecurityBean")
     private SecurityBean securityBean;
     @JsonProperty("MemberCount")
-    private int MemberCount;
+    private Long MemberCount;
     @JsonProperty("Seq")
-    private int Seq;
+    private Long Seq;
     @JsonProperty("MemberList")
     private List<WeChatMember.MemberListBean> MemberList;
 
-    public int getMemberCount() {
+    public Long getMemberCount() {
         return MemberCount;
     }
 
-    public void setMemberCount(int MemberCount) {
+    public void setMemberCount(Long MemberCount) {
         this.MemberCount = MemberCount;
     }
 
-    public int getSeq() {
+    public Long getSeq() {
         return Seq;
     }
 
-    public void setSeq(int Seq) {
+    public void setSeq(Long Seq) {
         this.Seq = Seq;
     }
 
@@ -136,7 +136,7 @@ public class WeChatModel {
          */
 
         @JsonProperty("Uin")
-        private int Uin;
+        private Long Uin;
         @JsonProperty("UserName")
         private String UserName;
         @JsonProperty("NickName")
@@ -144,21 +144,21 @@ public class WeChatModel {
         @JsonProperty("HeadImgUrl")
         private String HeadImgUrl;
         @JsonProperty("ContactFlag")
-        private int ContactFlag;
+        private Long ContactFlag;
         @JsonProperty("MemberCount")
-        private int MemberCount;
+        private Long MemberCount;
         @JsonProperty("RemarkName")
         private String RemarkName;
         @JsonProperty("HideInputBarFlag")
-        private int HideInputBarFlag;
+        private Long HideInputBarFlag;
         @JsonProperty("Sex")
-        private int Sex;
+        private Long Sex;
         @JsonProperty("Signature")
         private String Signature;
         @JsonProperty("VerifyFlag")
-        private int VerifyFlag;
+        private Long VerifyFlag;
         @JsonProperty("OwnerUin")
-        private int OwnerUin;
+        private Long OwnerUin;
         @JsonProperty("PYInitial")
         private String PYInitial;
         @JsonProperty("PYQuanPin")
@@ -168,13 +168,13 @@ public class WeChatModel {
         @JsonProperty("RemarkPYQuanPin")
         private String RemarkPYQuanPin;
         @JsonProperty("StarFriend")
-        private int StarFriend;
+        private Long StarFriend;
         @JsonProperty("AppAccountFlag")
-        private int AppAccountFlag;
+        private Long AppAccountFlag;
         @JsonProperty("Statues")
-        private int Statues;
+        private Long Statues;
         @JsonProperty("AttrStatus")
-        private int AttrStatus;
+        private Long AttrStatus;
         @JsonProperty("Province")
         private String Province;
         @JsonProperty("City")
@@ -182,27 +182,27 @@ public class WeChatModel {
         @JsonProperty("Alias")
         private String Alias;
         @JsonProperty("SnsFlag")
-        private int SnsFlag;
+        private Long SnsFlag;
         @JsonProperty("UniFriend")
-        private int UniFriend;
+        private Long UniFriend;
         @JsonProperty("DisplayName")
         private String DisplayName;
         @JsonProperty("ChatRoomId")
-        private int ChatRoomId;
+        private Long ChatRoomId;
         @JsonProperty("KeyWord")
         private String KeyWord;
         @JsonProperty("EncryChatRoomId")
         private String EncryChatRoomId;
         @JsonProperty("IsOwner")
-        private int IsOwner;
+        private Long IsOwner;
         @JsonProperty("MemberList")
         private List<?> MemberList;
 
-        public int getUin() {
+        public Long getUin() {
             return Uin;
         }
 
-        public void setUin(int Uin) {
+        public void setUin(Long Uin) {
             this.Uin = Uin;
         }
 
@@ -230,19 +230,19 @@ public class WeChatModel {
             this.HeadImgUrl = HeadImgUrl;
         }
 
-        public int getContactFlag() {
+        public Long getContactFlag() {
             return ContactFlag;
         }
 
-        public void setContactFlag(int ContactFlag) {
+        public void setContactFlag(Long ContactFlag) {
             this.ContactFlag = ContactFlag;
         }
 
-        public int getMemberCount() {
+        public Long getMemberCount() {
             return MemberCount;
         }
 
-        public void setMemberCount(int MemberCount) {
+        public void setMemberCount(Long MemberCount) {
             this.MemberCount = MemberCount;
         }
 
@@ -254,19 +254,19 @@ public class WeChatModel {
             this.RemarkName = RemarkName;
         }
 
-        public int getHideInputBarFlag() {
+        public Long getHideInputBarFlag() {
             return HideInputBarFlag;
         }
 
-        public void setHideInputBarFlag(int HideInputBarFlag) {
+        public void setHideInputBarFlag(Long HideInputBarFlag) {
             this.HideInputBarFlag = HideInputBarFlag;
         }
 
-        public int getSex() {
+        public Long getSex() {
             return Sex;
         }
 
-        public void setSex(int Sex) {
+        public void setSex(Long Sex) {
             this.Sex = Sex;
         }
 
@@ -278,19 +278,19 @@ public class WeChatModel {
             this.Signature = Signature;
         }
 
-        public int getVerifyFlag() {
+        public Long getVerifyFlag() {
             return VerifyFlag;
         }
 
-        public void setVerifyFlag(int VerifyFlag) {
+        public void setVerifyFlag(Long VerifyFlag) {
             this.VerifyFlag = VerifyFlag;
         }
 
-        public int getOwnerUin() {
+        public Long getOwnerUin() {
             return OwnerUin;
         }
 
-        public void setOwnerUin(int OwnerUin) {
+        public void setOwnerUin(Long OwnerUin) {
             this.OwnerUin = OwnerUin;
         }
 
@@ -326,35 +326,35 @@ public class WeChatModel {
             this.RemarkPYQuanPin = RemarkPYQuanPin;
         }
 
-        public int getStarFriend() {
+        public Long getStarFriend() {
             return StarFriend;
         }
 
-        public void setStarFriend(int StarFriend) {
+        public void setStarFriend(Long StarFriend) {
             this.StarFriend = StarFriend;
         }
 
-        public int getAppAccountFlag() {
+        public Long getAppAccountFlag() {
             return AppAccountFlag;
         }
 
-        public void setAppAccountFlag(int AppAccountFlag) {
+        public void setAppAccountFlag(Long AppAccountFlag) {
             this.AppAccountFlag = AppAccountFlag;
         }
 
-        public int getStatues() {
+        public Long getStatues() {
             return Statues;
         }
 
-        public void setStatues(int Statues) {
+        public void setStatues(Long Statues) {
             this.Statues = Statues;
         }
 
-        public int getAttrStatus() {
+        public Long getAttrStatus() {
             return AttrStatus;
         }
 
-        public void setAttrStatus(int AttrStatus) {
+        public void setAttrStatus(Long AttrStatus) {
             this.AttrStatus = AttrStatus;
         }
 
@@ -382,19 +382,19 @@ public class WeChatModel {
             this.Alias = Alias;
         }
 
-        public int getSnsFlag() {
+        public Long getSnsFlag() {
             return SnsFlag;
         }
 
-        public void setSnsFlag(int SnsFlag) {
+        public void setSnsFlag(Long SnsFlag) {
             this.SnsFlag = SnsFlag;
         }
 
-        public int getUniFriend() {
+        public Long getUniFriend() {
             return UniFriend;
         }
 
-        public void setUniFriend(int UniFriend) {
+        public void setUniFriend(Long UniFriend) {
             this.UniFriend = UniFriend;
         }
 
@@ -406,11 +406,11 @@ public class WeChatModel {
             this.DisplayName = DisplayName;
         }
 
-        public int getChatRoomId() {
+        public Long getChatRoomId() {
             return ChatRoomId;
         }
 
-        public void setChatRoomId(int ChatRoomId) {
+        public void setChatRoomId(Long ChatRoomId) {
             this.ChatRoomId = ChatRoomId;
         }
 
@@ -430,11 +430,11 @@ public class WeChatModel {
             this.EncryChatRoomId = EncryChatRoomId;
         }
 
-        public int getIsOwner() {
+        public Long getIsOwner() {
             return IsOwner;
         }
 
-        public void setIsOwner(int IsOwner) {
+        public void setIsOwner(Long IsOwner) {
             this.IsOwner = IsOwner;
         }
 
@@ -467,11 +467,11 @@ public class WeChatModel {
         this.BaseResponse = BaseResponse;
     }
 
-    public int getCount() {
+    public Long getCount() {
         return Count;
     }
 
-    public void setCount(int Count) {
+    public void setCount(Long Count) {
         this.Count = Count;
     }
 
@@ -507,51 +507,51 @@ public class WeChatModel {
         this.SKey = SKey;
     }
 
-    public int getClientVersion() {
+    public Long getClientVersion() {
         return ClientVersion;
     }
 
-    public void setClientVersion(int ClientVersion) {
+    public void setClientVersion(Long ClientVersion) {
         this.ClientVersion = ClientVersion;
     }
 
-    public int getSystemTime() {
+    public Long getSystemTime() {
         return SystemTime;
     }
 
-    public void setSystemTime(int SystemTime) {
+    public void setSystemTime(Long SystemTime) {
         this.SystemTime = SystemTime;
     }
 
-    public int getGrayScale() {
+    public Long getGrayScale() {
         return GrayScale;
     }
 
-    public void setGrayScale(int GrayScale) {
+    public void setGrayScale(Long GrayScale) {
         this.GrayScale = GrayScale;
     }
 
-    public int getInviteStartCount() {
+    public Long getInviteStartCount() {
         return InviteStartCount;
     }
 
-    public void setInviteStartCount(int InviteStartCount) {
+    public void setInviteStartCount(Long InviteStartCount) {
         this.InviteStartCount = InviteStartCount;
     }
 
-    public int getMPSubscribeMsgCount() {
+    public Long getMPSubscribeMsgCount() {
         return MPSubscribeMsgCount;
     }
 
-    public void setMPSubscribeMsgCount(int MPSubscribeMsgCount) {
+    public void setMPSubscribeMsgCount(Long MPSubscribeMsgCount) {
         this.MPSubscribeMsgCount = MPSubscribeMsgCount;
     }
 
-    public int getClickReportInterval() {
+    public Long getClickReportInterval() {
         return ClickReportInterval;
     }
 
-    public void setClickReportInterval(int ClickReportInterval) {
+    public void setClickReportInterval(Long ClickReportInterval) {
         this.ClickReportInterval = ClickReportInterval;
     }
 
@@ -579,15 +579,15 @@ public class WeChatModel {
          */
 
         @JsonProperty("Ret")
-        private int Ret;
+        private Long Ret;
         @JsonProperty("ErrMsg")
         private String ErrMsg;
 
-        public int getRet() {
+        public Long getRet() {
             return Ret;
         }
 
-        public void setRet(int Ret) {
+        public void setRet(Long Ret) {
             this.Ret = Ret;
         }
 
@@ -608,7 +608,7 @@ public class WeChatModel {
          */
 
         @JsonProperty("Count")
-        private int Count;
+        private Long Count;
         @JsonProperty("List")
         private java.util.List<ListBean> List;
 
@@ -622,11 +622,11 @@ public class WeChatModel {
                     .collect(Collectors.joining("|"));
         }
 
-        public int getCount() {
+        public Long getCount() {
             return Count;
         }
 
-        public void setCount(int Count) {
+        public void setCount(Long Count) {
             this.Count = Count;
         }
 
@@ -646,23 +646,23 @@ public class WeChatModel {
              */
 
             @JsonProperty("Key")
-            private int Key;
+            private Long Key;
             @JsonProperty("Val")
-            private int Val;
+            private Long Val;
 
-            public int getKey() {
+            public Long getKey() {
                 return Key;
             }
 
-            public void setKey(int Key) {
+            public void setKey(Long Key) {
                 this.Key = Key;
             }
 
-            public int getVal() {
+            public Long getVal() {
                 return Val;
             }
 
-            public void setVal(int Val) {
+            public void setVal(Long Val) {
                 this.Val = Val;
             }
         }
@@ -693,7 +693,7 @@ public class WeChatModel {
          */
 
         @JsonProperty("Uin")
-        private int Uin;
+        private Long Uin;
         @JsonProperty("UserName")
         private String UserName;
         @JsonProperty("NickName")
@@ -711,31 +711,31 @@ public class WeChatModel {
         @JsonProperty("RemarkPYQuanPin")
         private String RemarkPYQuanPin;
         @JsonProperty("HideInputBarFlag")
-        private int HideInputBarFlag;
+        private Long HideInputBarFlag;
         @JsonProperty("StarFriend")
-        private int StarFriend;
+        private Long StarFriend;
         @JsonProperty("Sex")
-        private int Sex;
+        private Long Sex;
         @JsonProperty("Signature")
         private String Signature;
         @JsonProperty("AppAccountFlag")
-        private int AppAccountFlag;
+        private Long AppAccountFlag;
         @JsonProperty("VerifyFlag")
-        private int VerifyFlag;
+        private Long VerifyFlag;
         @JsonProperty("ContactFlag")
-        private int ContactFlag;
+        private Long ContactFlag;
         @JsonProperty("WebWxPluginSwitch")
-        private int WebWxPluginSwitch;
+        private Long WebWxPluginSwitch;
         @JsonProperty("HeadImgFlag")
-        private int HeadImgFlag;
+        private Long HeadImgFlag;
         @JsonProperty("SnsFlag")
-        private int SnsFlag;
+        private Long SnsFlag;
 
-        public int getUin() {
+        public Long getUin() {
             return Uin;
         }
 
-        public void setUin(int Uin) {
+        public void setUin(Long Uin) {
             this.Uin = Uin;
         }
 
@@ -803,27 +803,27 @@ public class WeChatModel {
             this.RemarkPYQuanPin = RemarkPYQuanPin;
         }
 
-        public int getHideInputBarFlag() {
+        public Long getHideInputBarFlag() {
             return HideInputBarFlag;
         }
 
-        public void setHideInputBarFlag(int HideInputBarFlag) {
+        public void setHideInputBarFlag(Long HideInputBarFlag) {
             this.HideInputBarFlag = HideInputBarFlag;
         }
 
-        public int getStarFriend() {
+        public Long getStarFriend() {
             return StarFriend;
         }
 
-        public void setStarFriend(int StarFriend) {
+        public void setStarFriend(Long StarFriend) {
             this.StarFriend = StarFriend;
         }
 
-        public int getSex() {
+        public Long getSex() {
             return Sex;
         }
 
-        public void setSex(int Sex) {
+        public void setSex(Long Sex) {
             this.Sex = Sex;
         }
 
@@ -835,51 +835,51 @@ public class WeChatModel {
             this.Signature = Signature;
         }
 
-        public int getAppAccountFlag() {
+        public Long getAppAccountFlag() {
             return AppAccountFlag;
         }
 
-        public void setAppAccountFlag(int AppAccountFlag) {
+        public void setAppAccountFlag(Long AppAccountFlag) {
             this.AppAccountFlag = AppAccountFlag;
         }
 
-        public int getVerifyFlag() {
+        public Long getVerifyFlag() {
             return VerifyFlag;
         }
 
-        public void setVerifyFlag(int VerifyFlag) {
+        public void setVerifyFlag(Long VerifyFlag) {
             this.VerifyFlag = VerifyFlag;
         }
 
-        public int getContactFlag() {
+        public Long getContactFlag() {
             return ContactFlag;
         }
 
-        public void setContactFlag(int ContactFlag) {
+        public void setContactFlag(Long ContactFlag) {
             this.ContactFlag = ContactFlag;
         }
 
-        public int getWebWxPluginSwitch() {
+        public Long getWebWxPluginSwitch() {
             return WebWxPluginSwitch;
         }
 
-        public void setWebWxPluginSwitch(int WebWxPluginSwitch) {
+        public void setWebWxPluginSwitch(Long WebWxPluginSwitch) {
             this.WebWxPluginSwitch = WebWxPluginSwitch;
         }
 
-        public int getHeadImgFlag() {
+        public Long getHeadImgFlag() {
             return HeadImgFlag;
         }
 
-        public void setHeadImgFlag(int HeadImgFlag) {
+        public void setHeadImgFlag(Long HeadImgFlag) {
             this.HeadImgFlag = HeadImgFlag;
         }
 
-        public int getSnsFlag() {
+        public Long getSnsFlag() {
             return SnsFlag;
         }
 
-        public void setSnsFlag(int SnsFlag) {
+        public void setSnsFlag(Long SnsFlag) {
             this.SnsFlag = SnsFlag;
         }
     }
@@ -921,7 +921,7 @@ public class WeChatModel {
          */
 
         @JsonProperty("Uin")
-        private int Uin;
+        private Long Uin;
         @JsonProperty("UserName")
         private String UserName;
         @JsonProperty("NickName")
@@ -929,21 +929,21 @@ public class WeChatModel {
         @JsonProperty("HeadImgUrl")
         private String HeadImgUrl;
         @JsonProperty("ContactFlag")
-        private int ContactFlag;
+        private Long ContactFlag;
         @JsonProperty("MemberCount")
-        private int MemberCount;
+        private Long MemberCount;
         @JsonProperty("RemarkName")
         private String RemarkName;
         @JsonProperty("HideInputBarFlag")
-        private int HideInputBarFlag;
+        private Long HideInputBarFlag;
         @JsonProperty("Sex")
-        private int Sex;
+        private Long Sex;
         @JsonProperty("Signature")
         private String Signature;
         @JsonProperty("VerifyFlag")
-        private int VerifyFlag;
+        private Long VerifyFlag;
         @JsonProperty("OwnerUin")
-        private int OwnerUin;
+        private Long OwnerUin;
         @JsonProperty("PYInitial")
         private String PYInitial;
         @JsonProperty("PYQuanPin")
@@ -953,13 +953,13 @@ public class WeChatModel {
         @JsonProperty("RemarkPYQuanPin")
         private String RemarkPYQuanPin;
         @JsonProperty("StarFriend")
-        private int StarFriend;
+        private Long StarFriend;
         @JsonProperty("AppAccountFlag")
-        private int AppAccountFlag;
+        private Long AppAccountFlag;
         @JsonProperty("Statues")
-        private int Statues;
+        private Long Statues;
         @JsonProperty("AttrStatus")
-        private int AttrStatus;
+        private Long AttrStatus;
         @JsonProperty("Province")
         private String Province;
         @JsonProperty("City")
@@ -967,27 +967,27 @@ public class WeChatModel {
         @JsonProperty("Alias")
         private String Alias;
         @JsonProperty("SnsFlag")
-        private int SnsFlag;
+        private Long SnsFlag;
         @JsonProperty("UniFriend")
-        private int UniFriend;
+        private Long UniFriend;
         @JsonProperty("DisplayName")
         private String DisplayName;
         @JsonProperty("ChatRoomId")
-        private int ChatRoomId;
+        private Long ChatRoomId;
         @JsonProperty("KeyWord")
         private String KeyWord;
         @JsonProperty("EncryChatRoomId")
         private String EncryChatRoomId;
         @JsonProperty("IsOwner")
-        private int IsOwner;
+        private Long IsOwner;
         @JsonProperty("MemberList")
         private List<?> MemberList;
 
-        public int getUin() {
+        public Long getUin() {
             return Uin;
         }
 
-        public void setUin(int Uin) {
+        public void setUin(Long Uin) {
             this.Uin = Uin;
         }
 
@@ -1015,19 +1015,19 @@ public class WeChatModel {
             this.HeadImgUrl = HeadImgUrl;
         }
 
-        public int getContactFlag() {
+        public Long getContactFlag() {
             return ContactFlag;
         }
 
-        public void setContactFlag(int ContactFlag) {
+        public void setContactFlag(Long ContactFlag) {
             this.ContactFlag = ContactFlag;
         }
 
-        public int getMemberCount() {
+        public Long getMemberCount() {
             return MemberCount;
         }
 
-        public void setMemberCount(int MemberCount) {
+        public void setMemberCount(Long MemberCount) {
             this.MemberCount = MemberCount;
         }
 
@@ -1039,19 +1039,19 @@ public class WeChatModel {
             this.RemarkName = RemarkName;
         }
 
-        public int getHideInputBarFlag() {
+        public Long getHideInputBarFlag() {
             return HideInputBarFlag;
         }
 
-        public void setHideInputBarFlag(int HideInputBarFlag) {
+        public void setHideInputBarFlag(Long HideInputBarFlag) {
             this.HideInputBarFlag = HideInputBarFlag;
         }
 
-        public int getSex() {
+        public Long getSex() {
             return Sex;
         }
 
-        public void setSex(int Sex) {
+        public void setSex(Long Sex) {
             this.Sex = Sex;
         }
 
@@ -1063,19 +1063,19 @@ public class WeChatModel {
             this.Signature = Signature;
         }
 
-        public int getVerifyFlag() {
+        public Long getVerifyFlag() {
             return VerifyFlag;
         }
 
-        public void setVerifyFlag(int VerifyFlag) {
+        public void setVerifyFlag(Long VerifyFlag) {
             this.VerifyFlag = VerifyFlag;
         }
 
-        public int getOwnerUin() {
+        public Long getOwnerUin() {
             return OwnerUin;
         }
 
-        public void setOwnerUin(int OwnerUin) {
+        public void setOwnerUin(Long OwnerUin) {
             this.OwnerUin = OwnerUin;
         }
 
@@ -1111,35 +1111,35 @@ public class WeChatModel {
             this.RemarkPYQuanPin = RemarkPYQuanPin;
         }
 
-        public int getStarFriend() {
+        public Long getStarFriend() {
             return StarFriend;
         }
 
-        public void setStarFriend(int StarFriend) {
+        public void setStarFriend(Long StarFriend) {
             this.StarFriend = StarFriend;
         }
 
-        public int getAppAccountFlag() {
+        public Long getAppAccountFlag() {
             return AppAccountFlag;
         }
 
-        public void setAppAccountFlag(int AppAccountFlag) {
+        public void setAppAccountFlag(Long AppAccountFlag) {
             this.AppAccountFlag = AppAccountFlag;
         }
 
-        public int getStatues() {
+        public Long getStatues() {
             return Statues;
         }
 
-        public void setStatues(int Statues) {
+        public void setStatues(Long Statues) {
             this.Statues = Statues;
         }
 
-        public int getAttrStatus() {
+        public Long getAttrStatus() {
             return AttrStatus;
         }
 
-        public void setAttrStatus(int AttrStatus) {
+        public void setAttrStatus(Long AttrStatus) {
             this.AttrStatus = AttrStatus;
         }
 
@@ -1167,19 +1167,19 @@ public class WeChatModel {
             this.Alias = Alias;
         }
 
-        public int getSnsFlag() {
+        public Long getSnsFlag() {
             return SnsFlag;
         }
 
-        public void setSnsFlag(int SnsFlag) {
+        public void setSnsFlag(Long SnsFlag) {
             this.SnsFlag = SnsFlag;
         }
 
-        public int getUniFriend() {
+        public Long getUniFriend() {
             return UniFriend;
         }
 
-        public void setUniFriend(int UniFriend) {
+        public void setUniFriend(Long UniFriend) {
             this.UniFriend = UniFriend;
         }
 
@@ -1191,11 +1191,11 @@ public class WeChatModel {
             this.DisplayName = DisplayName;
         }
 
-        public int getChatRoomId() {
+        public Long getChatRoomId() {
             return ChatRoomId;
         }
 
-        public void setChatRoomId(int ChatRoomId) {
+        public void setChatRoomId(Long ChatRoomId) {
             this.ChatRoomId = ChatRoomId;
         }
 
@@ -1215,11 +1215,11 @@ public class WeChatModel {
             this.EncryChatRoomId = EncryChatRoomId;
         }
 
-        public int getIsOwner() {
+        public Long getIsOwner() {
             return IsOwner;
         }
 
-        public void setIsOwner(int IsOwner) {
+        public void setIsOwner(Long IsOwner) {
             this.IsOwner = IsOwner;
         }
 
@@ -1245,9 +1245,9 @@ public class WeChatModel {
         @JsonProperty("UserName")
         private String UserName;
         @JsonProperty("MPArticleCount")
-        private int MPArticleCount;
+        private Long MPArticleCount;
         @JsonProperty("Time")
-        private int Time;
+        private Long Time;
         @JsonProperty("NickName")
         private String NickName;
         @JsonProperty("MPArticleList")
@@ -1261,19 +1261,19 @@ public class WeChatModel {
             this.UserName = UserName;
         }
 
-        public int getMPArticleCount() {
+        public Long getMPArticleCount() {
             return MPArticleCount;
         }
 
-        public void setMPArticleCount(int MPArticleCount) {
+        public void setMPArticleCount(Long MPArticleCount) {
             this.MPArticleCount = MPArticleCount;
         }
 
-        public int getTime() {
+        public Long getTime() {
             return Time;
         }
 
-        public void setTime(int Time) {
+        public void setTime(Long Time) {
             this.Time = Time;
         }
 
