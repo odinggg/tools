@@ -7,7 +7,7 @@ import java.util.ArrayList;
 /**
  * 描述:
  *
- * @author QinHaoChun
+ * @author Hansen
  * @version 2020-02-26 10:38
  */
 public class WorkWeChatMessageFormatModel {

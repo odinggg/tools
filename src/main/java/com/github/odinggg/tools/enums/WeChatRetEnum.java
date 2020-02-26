@@ -7,7 +7,7 @@ import java.util.stream.Stream;
 /**
  * 描述:
  *
- * @author QinHaoChun
+ * @author Hansen
  * @version 2020-02-26 9:49
  */
 public enum WeChatRetEnum {

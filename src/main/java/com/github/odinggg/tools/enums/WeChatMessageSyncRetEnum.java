@@ -3,7 +3,7 @@ package com.github.odinggg.tools.enums;
 /**
  * 描述:
  *
- * @author QinHaoChun
+ * @author Hansen
  * @version 2020-02-26 9:49
  */
 public enum WeChatMessageSyncRetEnum {

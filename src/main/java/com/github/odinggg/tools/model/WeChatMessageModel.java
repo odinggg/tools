@@ -9,7 +9,7 @@ import java.util.List;
  * 描述:
  * 微信消息实体
  *
- * @author QinHaoChun
+ * @author Hansen
  * @version 2020-02-26 9:40
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
