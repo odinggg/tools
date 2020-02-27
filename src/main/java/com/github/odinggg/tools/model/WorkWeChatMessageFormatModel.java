@@ -12,11 +12,12 @@ import java.util.ArrayList;
  * @version 2020-02-26 10:38
  */
 public class WorkWeChatMessageFormatModel {
-    private final String templateString = "### %s/%s%n[%s]";
+    private final String templateString = "### %s/%s/%s%n[%s]";
     private String name;
     private String weChatName;
     private String remarkName;
     private String content;
+    private String uuid;
 
     @Override
     public String toString() {
@@ -27,6 +28,7 @@ public class WorkWeChatMessageFormatModel {
             list.add(remarkName);
         }
         list.add(weChatName);
+        list.add(uuid);
         list.add(content);
         return String.format(templateString, list.toArray());
     }
@@ -53,6 +55,14 @@ public class WorkWeChatMessageFormatModel {
 
     public void setRemarkName(String remarkName) {
         this.remarkName = remarkName;
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 
     public String getContent() {

@@ -2,6 +2,7 @@ package com.github.odinggg.tools.wechat;
 
 import com.github.odinggg.tools.model.WeChatMessageModel;
 import com.github.odinggg.tools.model.WeChatModel;
+import com.github.odinggg.tools.model.WorkWeChatMessageFormatModel;
 import org.apache.http.client.CookieStore;
 import org.apache.http.impl.client.BasicCookieStore;
 
@@ -21,4 +22,6 @@ public interface WeChatInterface {
     WeChatMessageModel getMessage(WeChatModel weChatModel, BasicCookieStore basicCookieStore);
 
     String formatMessage(WeChatMessageModel.AddMsgListBean weChatMessageModel, WeChatModel weChatModel);
+
+    boolean sendMessage(WeChatModel model, WorkWeChatMessageFormatModel formatModel);
 }

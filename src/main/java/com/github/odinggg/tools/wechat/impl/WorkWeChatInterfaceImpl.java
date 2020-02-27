@@ -1,11 +1,15 @@
 package com.github.odinggg.tools.wechat.impl;
 
 import com.github.odinggg.tools.Configuration;
+import com.github.odinggg.tools.controller.WeChatController;
 import com.github.odinggg.tools.enums.HttpParamEnum;
+import com.github.odinggg.tools.model.WeChatModel;
 import com.github.odinggg.tools.model.WorkWeChatMessage;
+import com.github.odinggg.tools.model.WorkWeChatMessageFormatModel;
 import com.github.odinggg.tools.model.WorkWeChatResponse;
 import com.github.odinggg.tools.util.HttpClientUtil;
 import com.github.odinggg.tools.util.JacksonConvertUtil;
+import com.github.odinggg.tools.wechat.WeChatInterface;
 import com.github.odinggg.tools.wechat.WorkWeChatInterface;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,6 +22,8 @@ import java.util.HashMap;
 public class WorkWeChatInterfaceImpl implements WorkWeChatInterface {
     @Autowired
     private Configuration configuration;
+    @Autowired
+    private WeChatInterface weChatInterface;
 
     @Override
     public WorkWeChatResponse sendMessage(WorkWeChatMessage workWeChatMessage) {
@@ -58,5 +64,32 @@ public class WorkWeChatInterfaceImpl implements WorkWeChatInterface {
     @Override
     public WorkWeChatMessage receiveMessage() {
         return null;
+    }
+
+    @Override
+    public void toWeChat(String content) {
+        WorkWeChatMessageFormatModel formatModel = parseMessage(content);
+        if (formatModel == null) {
+            return;
+        }
+        WeChatModel model = WeChatController.MAP.get(formatModel.getUuid());
+        if (model == null) {
+            return;
+        }
+        weChatInterface.sendMessage(model, formatModel);
+    }
+
+    @Override
+    public WorkWeChatMessageFormatModel parseMessage(String content) {
+        if (StringUtils.isEmpty(content) || !content.startsWith("@")) {
+            return null;
+        }
+        WorkWeChatMessageFormatModel model = new WorkWeChatMessageFormatModel();
+        int i = content.indexOf("@@@");
+        model.setContent(content.substring(i + 3));
+        String[] split = content.substring(0, i).split(",");
+        model.setUuid(split[0]);
+        model.setWeChatName(split[1]);
+        return model;
     }
 }

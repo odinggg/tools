@@ -1,5 +1,6 @@
 package com.github.odinggg.tools.wechat.impl;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.github.odinggg.tools.constant.WeChatConstant;
 import com.github.odinggg.tools.controller.WeChatController;
 import com.github.odinggg.tools.model.WeChatInitRequest;
@@ -7,6 +8,7 @@ import com.github.odinggg.tools.model.WeChatMember;
 import com.github.odinggg.tools.model.WeChatMessageModel;
 import com.github.odinggg.tools.model.WeChatMessageRequest;
 import com.github.odinggg.tools.model.WeChatModel;
+import com.github.odinggg.tools.model.WeChatSendMessageRequest;
 import com.github.odinggg.tools.model.WorkWeChatMessageFormatModel;
 import com.github.odinggg.tools.tasks.WeChatMessageListenTask;
 import com.github.odinggg.tools.util.HttpClientUtil;
@@ -123,8 +125,10 @@ public class WeChatInterfaceImpl implements WeChatInterface {
                         // 存放用户信息
                         WeChatController.MAP.putIfAbsent(uuid, weChatModel);
                         // 启动异步获取消息线程
-                        executorService.execute(SpringBeansUtil.getBean(WeChatMessageListenTask.class)
-                                .setWeChatModel(weChatModel).setBasicCookieStore(basicCookieStore));
+                        WeChatMessageListenTask weChatMessageListenTask = SpringBeansUtil.getBean(WeChatMessageListenTask.class)
+                                .setWeChatModel(weChatModel).setBasicCookieStore(basicCookieStore);
+                        WeChatController.THREADS.put(uuid, weChatMessageListenTask);
+                        executorService.execute(weChatMessageListenTask);
                         return "success";
                     }
                 } else if (!StringUtils.isEmpty(code) && code.startsWith("408") || code.startsWith("201")) {
@@ -192,6 +196,7 @@ public class WeChatInterfaceImpl implements WeChatInterface {
         if (!CollectionUtils.isEmpty(memberList)) {
             WorkWeChatMessageFormatModel workWeChatMessageFormatModel = new WorkWeChatMessageFormatModel();
             workWeChatMessageFormatModel.setContent(weChatMessageModel.getContent());
+            workWeChatMessageFormatModel.setUuid(weChatModel.getSecurityBean().getUuid());
             memberList.stream()
                     .filter(memberListBean -> memberListBean.getUserName().equals(weChatMessageModel.getFromUserName()))
                     .findAny()
@@ -203,6 +208,40 @@ public class WeChatInterfaceImpl implements WeChatInterface {
             return workWeChatMessageFormatModel.toString();
         }
         return "";
+    }
+
+    @Override
+    public boolean sendMessage(WeChatModel model, WorkWeChatMessageFormatModel formatModel) {
+        WeChatMessageListenTask task = WeChatController.THREADS.get(formatModel.getUuid());
+        if (task == null) {
+            return false;
+        }
+        WeChatModel.SecurityBean securityBean = model.getSecurityBean();
+        HashMap<String, String> params = new HashMap<>();
+        params.put("pass_ticket", securityBean.getWxsid());
+        WeChatSendMessageRequest weChatSendMessageRequest = new WeChatSendMessageRequest();
+        WeChatSendMessageRequest.BaseRequestBean baseRequestBean = new WeChatSendMessageRequest.BaseRequestBean();
+        baseRequestBean.setUin(Long.parseLong(securityBean.getWxuin()));
+        baseRequestBean.setSid(securityBean.getWxsid());
+        baseRequestBean.setSkey(securityBean.getSkey());
+        baseRequestBean.setDeviceID(model.getDeviceId());
+        WeChatSendMessageRequest.MsgBean msgBean = new WeChatSendMessageRequest.MsgBean();
+        msgBean.setType(1L);
+        msgBean.setContent(formatModel.getContent());
+        msgBean.setFromUserName(model.getUser().getUserName());
+        msgBean.setToUserName(formatModel.getWeChatName());
+        msgBean.setLocalID(System.currentTimeMillis() + "" + String.valueOf(new Random().nextLong()).substring(1, 4));
+        msgBean.setClientMsgId(msgBean.getLocalID());
+        weChatSendMessageRequest.setBaseRequest(baseRequestBean);
+        weChatSendMessageRequest.setMsg(msgBean);
+        weChatSendMessageRequest.setScene(0L);
+        String response = HttpClientUtil.sendAndFormatResponse(task.getBasicCookieStore(), WeChatConstant.prefix + WeChatConstant.send_message, RequestMethod.POST, weChatSendMessageRequest, params, null, true, null);
+        JsonNode json = JacksonConvertUtil.getJSON(response);
+        String ret = JacksonConvertUtil.getJSONString(json, "Ret");
+        if (!StringUtils.isEmpty(ret) && ret.equals("0")) {
+            return true;
+        }
+        return false;
     }
 
     @Override

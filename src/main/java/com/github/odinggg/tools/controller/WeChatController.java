@@ -5,9 +5,11 @@ import com.github.odinggg.tools.enums.HttpParamEnum;
 import com.github.odinggg.tools.model.APIEntity;
 import com.github.odinggg.tools.model.WeChatModel;
 import com.github.odinggg.tools.model.WorkWeChatMessageXML;
+import com.github.odinggg.tools.tasks.WeChatMessageListenTask;
 import com.github.odinggg.tools.util.JacksonConvertUtil;
 import com.github.odinggg.tools.util.wechat.WXBizMsgCrypt;
 import com.github.odinggg.tools.wechat.WeChatInterface;
+import com.github.odinggg.tools.wechat.WorkWeChatInterface;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,8 +34,11 @@ public class WeChatController extends BaseController {
     private Configuration configuration;
     @Autowired
     private WeChatInterface weChatInterface;
+    @Autowired
+    private WorkWeChatInterface workWeChatInterface;
 
     public static final ConcurrentHashMap<String, WeChatModel> MAP = new ConcurrentHashMap<>();
+    public static final ConcurrentHashMap<String, WeChatMessageListenTask> THREADS = new ConcurrentHashMap<>();
 
     /**
      * wechat check
@@ -78,12 +83,13 @@ public class WeChatController extends BaseController {
             String sMsg = wxcpt.DecryptMsg(msgSignature, timestamp, nonce, sReqData);
             logger.info("微信消息: " + sMsg);
             WorkWeChatMessageXML workWeChatMessageXML = JacksonConvertUtil.xmlToObject(sMsg, WorkWeChatMessageXML.class);
+            workWeChatInterface.toWeChat(workWeChatMessageXML.getContent());
             WorkWeChatMessageXML responseXml = new WorkWeChatMessageXML();
             responseXml.setToUserName(workWeChatMessageXML.getFromUserName());
             responseXml.setFromUserName(workWeChatMessageXML.getToUserName());
             responseXml.setCreateTime(String.valueOf(System.currentTimeMillis() / 1000));
             responseXml.setMsgType("text");
-            responseXml.setContent(workWeChatMessageXML.getContent());
+            responseXml.setContent("成功");
             return wxcpt.EncryptMsg(JacksonConvertUtil.objectToXml(responseXml), timestamp, nonce);
         } catch (Exception e) {
             logger.error("微信校验异常：", e);

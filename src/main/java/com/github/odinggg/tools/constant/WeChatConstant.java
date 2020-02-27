@@ -17,5 +17,6 @@ public class WeChatConstant {
     public static final String memeber_init = "/cgi-bin/mmwebwx-bin/webwxgetcontact";
     public static final String get_message = "/cgi-bin/mmwebwx-bin/webwxsync";
     public static final String login = "/cgi-bin/mmwebwx-bin/webwxnewloginpage";
+    public static final String send_message = "/cgi-bin/mmwebwx-bin/webwxsendmsg";
 
 }
