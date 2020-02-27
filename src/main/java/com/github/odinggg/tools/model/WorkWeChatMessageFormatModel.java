@@ -2,6 +2,7 @@ package com.github.odinggg.tools.model;
 
 import org.springframework.util.StringUtils;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 
 /**
@@ -11,7 +12,7 @@ import java.util.ArrayList;
  * @version 2020-02-26 10:38
  */
 public class WorkWeChatMessageFormatModel {
-    private final String templateString = "### {1}/{2}\n[{3}]";
+    private final String templateString = "### %s/%s%n[%s]";
     private String name;
     private String weChatName;
     private String remarkName;
@@ -20,7 +21,6 @@ public class WorkWeChatMessageFormatModel {
     @Override
     public String toString() {
         ArrayList<String> list = new ArrayList<>();
-        String formatName;
         if (StringUtils.isEmpty(remarkName)) {
             list.add(name);
         } else {

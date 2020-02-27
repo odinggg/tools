@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import java.io.InputStream;
 import java.io.StringReader;
 import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
@@ -155,7 +156,8 @@ public class WeChatInterfaceImpl implements WeChatInterface {
         if (StringUtils.isEmpty(response) || !response.contains("MemberList")) {
             return weChatModel;
         }
-        WeChatMember weChatMember = JacksonConvertUtil.jsonToObject(response, WeChatMember.class);
+        String utf = new String(response.getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);
+        WeChatMember weChatMember = JacksonConvertUtil.jsonToObject(utf, WeChatMember.class);
         weChatModel.setMemberCount(weChatMember.getMemberCount());
         weChatModel.setMemberList(weChatMember.getMemberList());
         return weChatModel;
@@ -180,7 +182,8 @@ public class WeChatInterfaceImpl implements WeChatInterface {
         if (StringUtils.isEmpty(response) || !response.contains("BaseResponse")) {
             return null;
         }
-        return JacksonConvertUtil.jsonToObject(response, WeChatMessageModel.class);
+        String utf = new String(response.getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);
+        return JacksonConvertUtil.jsonToObject(utf, WeChatMessageModel.class);
     }
 
     @Override
