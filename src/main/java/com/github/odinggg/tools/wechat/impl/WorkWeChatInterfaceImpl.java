@@ -17,6 +17,8 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.util.HashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class WorkWeChatInterfaceImpl implements WorkWeChatInterface {
@@ -81,15 +83,25 @@ public class WorkWeChatInterfaceImpl implements WorkWeChatInterface {
 
     @Override
     public WorkWeChatMessageFormatModel parseMessage(String content) {
-        if (StringUtils.isEmpty(content) || !content.startsWith("@")) {
+        if (StringUtils.isEmpty(content) || !content.startsWith("###")) {
             return null;
         }
         WorkWeChatMessageFormatModel model = new WorkWeChatMessageFormatModel();
         int i = content.indexOf("@@@");
         model.setContent(content.substring(i + 3));
-        String[] split = content.substring(0, i).split(",");
-        model.setUuid(split[0]);
-        model.setWeChatName(split[1]);
+        String[] split = content.substring(0, i).split("/");
+        model.setUuid(replaceBlank(split[2]));
+        model.setWeChatName(replaceBlank(split[1]));
         return model;
+    }
+
+    public static String replaceBlank(String str) {
+        String dest = "";
+        if (str != null) {
+            Pattern p = Pattern.compile("\\s*|\t|\r|\n");
+            Matcher m = p.matcher(str);
+            dest = m.replaceAll("");
+        }
+        return dest;
     }
 }
