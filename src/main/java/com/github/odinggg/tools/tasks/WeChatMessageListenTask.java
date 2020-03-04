@@ -84,18 +84,29 @@ public class WeChatMessageListenTask implements Runnable {
                             switch (WeChatMessageTypeEnum.parse(addMsgListBean.getMsgType())) {
                                 case TEXT:
                                 case IMAGE:
+                                    addMsgListBean.setContent("图片消息");
+                                    break;
                                 case VOICE:
+                                    addMsgListBean.setContent("语音消息");
+                                    break;
                                 case VIDEO:
+                                    addMsgListBean.setContent("视频消息");
+                                    break;
                                 case MICRO_VIDEO:
+                                    addMsgListBean.setContent("短视频消息");
+                                    break;
                                 case EMOTI_CON:
+                                    addMsgListBean.setContent("表情消息");
+                                    break;
                                 case MEDIA:
-                                    // 转发企业微信
-                                    String message = weChatInterface.formatMessage(addMsgListBean, weChatModel);
-                                    workWeChatInterface.sendMessage(message);
+                                    addMsgListBean.setContent("多媒体消息");
+                                    break;
                                 default:
                                     break;
                             }
-
+                            // 转发企业微信
+                            String message = weChatInterface.formatMessage(addMsgListBean, weChatModel);
+                            workWeChatInterface.sendMessage(message);
                         });
 
                     }
