@@ -2,7 +2,6 @@ package com.github.odinggg.tools.model;
 
 import org.springframework.util.StringUtils;
 
-import java.text.MessageFormat;
 import java.util.ArrayList;
 
 /**
@@ -12,7 +11,6 @@ import java.util.ArrayList;
  * @version 2020-02-26 10:38
  */
 public class WorkWeChatMessageFormatModel {
-    private final String templateString = "### %s/%s/%s%n[%s]";
     private String name;
     private String weChatName;
     private String remarkName;
@@ -30,6 +28,7 @@ public class WorkWeChatMessageFormatModel {
         list.add(weChatName);
         list.add(uuid);
         list.add(content);
+        String templateString = "### %s/%s/%s%n[%s]";
         return String.format(templateString, list.toArray());
     }
 

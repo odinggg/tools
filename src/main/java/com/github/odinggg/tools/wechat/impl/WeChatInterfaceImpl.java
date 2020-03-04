@@ -122,6 +122,7 @@ public class WeChatInterfaceImpl implements WeChatInterface {
                             return "";
                         }
                         weChatModel = memberInit(weChatModel);
+                        weChatModel.getSecurityBean().setUuid(uuid);
                         // 存放用户信息
                         WeChatController.MAP.putIfAbsent(uuid, weChatModel);
                         // 启动异步获取消息线程
