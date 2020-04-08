@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 /**
  * 描述:
  *
- * @author QinHaoChun
+ * @author Hansen
  * @version 2020-02-27 18:54
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
