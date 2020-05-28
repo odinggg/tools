@@ -41,16 +41,23 @@ public class ChromeFollowTwitterService {
             String getPath() {
                 Logger logger = LoggerFactory.getLogger(this.getClass());
                 ClassLoader classLoader = this.getClass().getClassLoader();
-                URL resource = classLoader.getResource("./lib/chromedriver.exe");
+                URL resource = classLoader.getResource("classpath:/lib/chromedriver.exe");
                 if (resource != null) {
                     logger.info("resource:{}", resource.getPath());
+                    return resource.getPath();
                 } else {
                     logger.info("resource:{}", classLoader.getResource(""));
+                    return Objects.requireNonNull(classLoader.getResource("")).getPath().concat("lib").concat(File.separator).concat("chromedriver.exe");
                 }
-                return "jlksjlakjlak";
             }
         }.getPath().substring(1);
         System.setProperty("webdriver.chrome.driver", chromePath);
+    }
+
+    public static void main(String[] args) {
+        ChromeDriver chromeDriver = new ChromeDriver();
+        chromeDriver.get("https://mp.weixin.qq.com/s/TrkEXFm5ovEnlbgHECCc3w");
+        System.out.println("sss");
     }
 
     public void follow() throws Exception {
