@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
@@ -107,6 +108,16 @@ public class MainController {
     public Object properties2yml(@RequestBody Text text) {
         try {
             return toolService.properties2yml(text.getContent());
+        } catch (Exception e) {
+            logger.error("yml转properties异常", e);
+            return null;
+        }
+    }
+
+    @PostMapping("/wechatArticle2PDF")
+    public ByteBuffer wechatArticle2PDF(String url) {
+        try {
+            return toolService.wechatArticle2PDF(url);
         } catch (Exception e) {
             logger.error("yml转properties异常", e);
             return null;

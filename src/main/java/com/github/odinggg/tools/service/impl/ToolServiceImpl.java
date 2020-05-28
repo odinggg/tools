@@ -8,11 +8,15 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLParser;
 import com.github.odinggg.tools.model.Text;
 import com.github.odinggg.tools.model.TextNode;
 import com.github.odinggg.tools.service.ToolService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.net.URL;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -34,6 +38,23 @@ public class ToolServiceImpl implements ToolService {
 
     private final static List<JsonNodeType> JSON_NODE_TYPES = Stream.of(JsonNodeType.OBJECT, JsonNodeType.ARRAY, JsonNodeType.POJO)
             .collect(Collectors.toList());
+
+    static {
+        String chromePath = new Object() {
+            String getPath() {
+                Logger logger = LoggerFactory.getLogger(this.getClass());
+                ClassLoader classLoader = this.getClass().getClassLoader();
+                URL resource = classLoader.getResource("./lib/chromedriver.exe");
+                if (resource != null) {
+                    logger.info("resource:{}", resource.getPath());
+                } else {
+                    logger.info("resource:{}", classLoader.getResource(""));
+                }
+                return "jlksjlakjlak";
+            }
+        }.getPath().substring(1);
+        System.setProperty("webdriver.chrome.driver", chromePath);
+    }
 
     @Override
     public Text yml2properties(String content) throws Exception {
@@ -89,6 +110,15 @@ public class ToolServiceImpl implements ToolService {
         ObjectMapper objectMapper = new ObjectMapper(YAMLFactory.builder().build());
         String s = objectMapper.writeValueAsString(map);
         System.out.println(s);
+        return null;
+    }
+
+    @Override
+    public ByteBuffer wechatArticle2PDF(String url) {
+//        boolean b = checkUrl(url);
+//        if (b) {
+//
+//        }
         return null;
     }
 

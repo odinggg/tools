@@ -6,6 +6,7 @@
 4. properties转yml（未完成）
 5. work wechat 接收发送消息
 6. wechat web端接收发送消息
+7. 微信公众号文章转换pdf
 - 未完待续...
 ---
 ### 五、微信消息转发企业微信
