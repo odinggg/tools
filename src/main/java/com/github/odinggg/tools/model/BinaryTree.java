@@ -1,5 +1,7 @@
 package com.github.odinggg.tools.model;
 
+import java.util.LinkedList;
+
 public class BinaryTree {
 
     /**
@@ -253,6 +255,64 @@ public class BinaryTree {
             postOrder(localRoot.left);
             postOrder(localRoot.right);
             System.out.print(localRoot.data + " ");
+        }
+    }
+
+    /**
+     * 二叉树前序遍历   根-> 左-> 右
+     *
+     * @param node 二叉树节点
+     */
+    public static void preOrderTraversal(Node node) {
+        if (node == null) {
+            return;
+        }
+        System.out.print(node.data + " ");
+        preOrderTraversal(node.left);
+        preOrderTraversal(node.right);
+    }
+
+    /**
+     * 二叉树中序遍历   左-> 根-> 右
+     *
+     * @param node 二叉树节点
+     */
+    public static void inOrderTraversal(Node node) {
+        if (node == null) {
+            return;
+        }
+        inOrderTraversal(node.left);
+        System.out.print(node.data + " ");
+        inOrderTraversal(node.right);
+    }
+
+    /**
+     * 二叉树后序遍历   左-> 右-> 根
+     *
+     * @param node 二叉树节点
+     */
+    public static void postOrderTraversal(Node node) {
+        if (node == null) {
+            return;
+        }
+        postOrderTraversal(node.left);
+        postOrderTraversal(node.right);
+        System.out.print(node.data + " ");
+    }
+
+    /**
+     * 层序遍历
+     *
+     * @param root 二叉树节点
+     */
+    public static void levelOrder(Node root) {
+        LinkedList<Node> queue = new LinkedList<>();
+        queue.add(root);
+        while (!queue.isEmpty()) {
+            root = queue.pop();
+            System.out.print(root.data + " ");
+            if (root.left != null) queue.add(root.left);
+            if (root.right != null) queue.add(root.right);
         }
     }
 }
