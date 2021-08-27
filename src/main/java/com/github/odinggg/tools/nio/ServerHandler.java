@@ -1,11 +1,10 @@
 package com.github.odinggg.tools.nio;
 
 
-
 import com.github.odinggg.tools.util.ByteUtil;
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.StringUtils;
 
 import java.io.BufferedOutputStream;
 import java.io.DataOutputStream;
@@ -86,7 +85,7 @@ public class ServerHandler implements Runnable {
             out = socket.getOutputStream();
             while (true) {
                 String first = DATA_PACKETS.pollFirst();
-                if (StringUtils.isNotBlank(first)) {
+                if (!StringUtils.isEmpty(first)) {
                     byte[] text = ByteUtil.string2Byte(first);
                     ArrayList<Byte> bytes = new ArrayList<>();
                     bytes.add((byte) 0x00);
