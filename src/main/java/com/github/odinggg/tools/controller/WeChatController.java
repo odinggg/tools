@@ -5,6 +5,7 @@ import com.github.odinggg.tools.enums.HttpParamEnum;
 import com.github.odinggg.tools.model.APIEntity;
 import com.github.odinggg.tools.model.WeChatModel;
 import com.github.odinggg.tools.model.WorkWeChatMessageXML;
+import com.github.odinggg.tools.nio.ServerHandler;
 import com.github.odinggg.tools.tasks.WeChatMessageListenTask;
 import com.github.odinggg.tools.util.JacksonConvertUtil;
 import com.github.odinggg.tools.util.wechat.WXBizMsgCrypt;
@@ -84,6 +85,7 @@ public class WeChatController extends BaseController {
             logger.info("微信消息: " + sMsg);
             WorkWeChatMessageXML workWeChatMessageXML = JacksonConvertUtil.xmlToObject(sMsg, WorkWeChatMessageXML.class);
             workWeChatInterface.toWeChat(workWeChatMessageXML.getContent());
+            ServerHandler.DATA_PACKETS.push(workWeChatMessageXML.getContent());
             WorkWeChatMessageXML responseXml = new WorkWeChatMessageXML();
             responseXml.setToUserName(workWeChatMessageXML.getFromUserName());
             responseXml.setFromUserName(workWeChatMessageXML.getToUserName());
@@ -120,7 +122,7 @@ public class WeChatController extends BaseController {
     public Object checkLogin(@PathVariable String uuid) {
         try {
             String s = weChatInterface.checkLogin(uuid);
-            return new APIEntity<>(200,"success",s);
+            return new APIEntity<>(200, "success", s);
         } catch (Exception e) {
             logger.error("微信获取二维码异常：", e);
             return new APIEntity<>(109, "system error");
