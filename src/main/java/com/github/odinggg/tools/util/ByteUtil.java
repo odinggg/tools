@@ -7,7 +7,7 @@ import java.util.Base64;
 import java.util.List;
 
 /**
- * Created by Zhutaoshen on 2018-4-22.
+ *
  */
 public class ByteUtil {
 
