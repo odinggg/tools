@@ -28,6 +28,9 @@ public class ServerHandler implements Runnable {
     private Socket socket;
     private byte[] bytes;
 
+    private boolean isInterrupted = false;
+
+
     public byte[] getBytes() {
         return bytes;
     }
@@ -74,6 +77,15 @@ public class ServerHandler implements Runnable {
     }
 
     private final DataOutputStream dos = null;
+
+    public Boolean isServerClose(Socket socket) {
+        try {
+            socket.sendUrgentData(0xFF);//发送1个字节的紧急数据，默认情况下，服务器端没有开启紧急数据处理，不影响正常通信
+            return false;
+        } catch (Exception se) {
+            return true;
+        }
+    }
 
     public void run() {
 
@@ -134,5 +146,13 @@ public class ServerHandler implements Runnable {
                 socket = null;
             }
         }
+    }
+
+    public boolean isInterrupted() {
+        return isInterrupted;
+    }
+
+    public void setInterrupted(boolean interrupted) {
+        isInterrupted = interrupted;
     }
 }

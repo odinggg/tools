@@ -14,7 +14,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @SpringBootApplication
-@EnableScheduling
 public class ToolsApplication {
 
     public static void main(String[] args) {
@@ -31,13 +30,5 @@ public class ToolsApplication {
             e.printStackTrace();
         }
     }
-
-    private final AtomicInteger i1 = new AtomicInteger(0);
-
-    @Scheduled(cron = "*/5 * * * * ?")
-    public void sendTest() {
-        ServerHandler.DATA_PACKETS.add("test" + i1.getAndAdd(1));
-    }
-
 }
 

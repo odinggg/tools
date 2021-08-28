@@ -10,6 +10,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -26,6 +27,7 @@ public final class ServerNormal implements Runnable {
     private static ServerSocket server;
 
     private List<ServerHandler> serverHandlers;
+    private List<Future<?>> futureList;
 
     private ExecutorService threadPool;
 
@@ -61,6 +63,7 @@ public final class ServerNormal implements Runnable {
     public synchronized void start(int port) throws IOException {
         if (server != null) return;
         serverHandlers = new ArrayList<>();
+        futureList = new ArrayList<>();
         try {
             //通过构造函数创建ServerSocket
             //如果端口合法且空闲，服务端就监听成功
@@ -81,7 +84,13 @@ public final class ServerNormal implements Runnable {
                         .getHostAddress() + "，主机名：" + socket.getInetAddress().getHostName());
                 ServerHandler serverHandler = new ServerHandler(socket);
                 serverHandlers.add(serverHandler);
-                threadPool.execute(serverHandler);
+                futureList.forEach(future -> {
+                    future.cancel(true);
+                });
+                futureList.clear();
+                serverHandlers.clear();
+                Future<?> submit = threadPool.submit(serverHandler);
+                futureList.add(submit);
             }
         } finally {
             //一些必要的清理工作
