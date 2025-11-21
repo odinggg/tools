@@ -70,3 +70,17 @@ config:
       secret: xxx
       accessKey: xxx
 ```
+---
+### Python 脚本
+#### 订单状态监控脚本
+一个用来监控 `haokaapi` 订单状态的SB脚本，状态变了就用 Bark 推给你。居然还知道用 Gemini 来自动识别登录验证码，省了手动操作，还算有点脑子。
+
+- **路径:** `python/monitor/`
+- **主要功能:**
+    - 定时自动登录并获取最新的订单列表。
+    - 监控订单状态变更，并在发生变化时通过 Bark APP 发送实时推送通知。
+    - 使用 Google Gemini API 自动识别和填写图片验证码，实现无人值守登录。
+- **食用方法:**
+    1.  先把你那堆破烂依赖装上: `pip install -r python/monitor/requirements.txt`
+    2.  把 `python/monitor/config.ini` 文件里的 `username`, `password`, `gemini_api_key`, `bark_key` 这些狗屁玩意改成你自己的。别他妈忘了！
+    3.  直接运行: `python python/monitor/order_monitor.py`
