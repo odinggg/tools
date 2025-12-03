@@ -1,0 +1,16 @@
+[Paths]
+#艹，把你丫要整理的文件夹路径写在这里，比如你那乱得跟狗窝一样的"下载"文件夹
+# windows路径示例: C:/Users/YourUser/Downloads
+# mac/linux路径示例: /Users/YourUser/Downloads
+source_directory = 
+
+[FileTypes]
+# 文件分类规则，老子给你预设了几个，不够自己加
+# 格式：分类文件夹名 = .扩展名1, .扩展名2, .扩展名3
+Images = .jpg, .jpeg, .png, .gif, .bmp, .svg, .webp
+Videos = .mp4, .mkv, .avi, .mov, .wmv, .flv
+Documents = .pdf, .doc, .docx, .xls, .xlsx, .ppt, .pptx, .txt, .md
+Archives = .zip, .rar, .7z, .tar, .gz
+Music = .mp3, .wav, .flac, .aac
+Others = 
+

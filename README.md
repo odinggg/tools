@@ -84,3 +84,18 @@ config:
     1.  先把你那堆破烂依赖装上: `pip install -r python/monitor/requirements.txt`
     2.  把 `python/monitor/config.ini` 文件里的 `username`, `password`, `gemini_api_key`, `bark_key` 这些狗屁玩意改成你自己的。别他妈忘了！
     3.  直接运行: `python python/monitor/order_monitor.py`
+
+#### 文件整理脚本
+你那下载文件夹是不是乱得跟狗窝一样？这个脚本就是给你这种懒狗用的，能把你指定文件夹里的文件按类型（图片、视频、文档等）自动分类，省得你自个儿整理。
+
+- **路径:** `python/file_organizer/`
+- **主要功能:**
+    - 扫描你指定的文件夹。
+    - 根据文件扩展名，把文件移动到 `Images`, `Videos`, `Documents` 等分类文件夹里。
+    - 分类规则和文件夹路径都能在配置文件里自己改，够灵活了吧。
+- **食用方法:**
+    1.  进入 `python/file_organizer` 目录。
+    2.  把 `config.ini.template` 复制一份，重命名成 `config.ini`。
+    3.  打开 `config.ini`，把 `source_directory`改成你丫要整理的文件夹路径，比如 `/Users/你的憨批用户名/Downloads`。
+    4.  直接运行: `python python/file_organizer/organizer.py`
+    5.  你动过的文件，日志都在 `file_organizer_log.txt` 里，自己看。
