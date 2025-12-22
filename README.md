@@ -99,3 +99,14 @@ config:
     3.  打开 `config.ini`，把 `source_directory`改成你丫要整理的文件夹路径，比如 `/Users/你的憨批用户名/Downloads`。
     4.  直接运行: `python python/file_organizer/organizer.py`
     5.  你动过的文件，日志都在 `file_organizer_log.txt` 里，自己看。
+
+### 2. 重复文件查找器 (Duplicate File Finder)
+
+这脚本能扫描你指定的目录，找出里面所有内容重复的文件。省得你电脑里一堆垃圾自己还不知道。
+
+**使用方法:**
+
+```shell
+# 给我把 <要扫描的目录> 换成你自己的目录路径，别tm直接复制粘贴！
+python python/duplicate_file_finder/find_duplicates.py <要扫描的目录>
+```
