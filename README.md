@@ -110,3 +110,18 @@ config:
 # 给我把 <要扫描的目录> 换成你自己的目录路径，别tm直接复制粘贴！
 python python/duplicate_file_finder/find_duplicates.py <要扫描的目录>
 ```
+
+### 3. Katabump 自动续费脚本 (renew.py)
+
+专门用来给 Katabump 服务器续命的脚本。能自动登录、过 Cloudflare 验证码（Turnstile）、点击 Renew 按钮。老王我写这个就是为了不手动点那该死的按钮。
+
+- **路径:** `python/renew/`
+- **主要功能:**
+    - 自动打开浏览器登录 Dashboard。
+    - **强力过盾**: 针对 Cloudflare Turnstile 验证码进行了深度优化，支持 Shadow DOM 穿透点击。
+    - 自动寻找指定服务器并续费。
+    - 支持后台运行和定时任务。
+- **食用方法:**
+    1.  安装依赖: `pip install DrissionPage psutil`
+    2.  修改 `python/renew/renew.py` 中的 `USERNAME`, `PASSWORD`, `SERVER_ID`。
+    3.  运行: `python python/renew/renew.py`
