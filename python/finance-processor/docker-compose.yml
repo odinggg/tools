@@ -1,0 +1,28 @@
+services:
+  finance-processor:
+    build: .
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    environment:
+      # 例：如 Layout API 也在 compose 网络中，可改成 http://layout-api:8080/layout-parsing
+      - LAYOUT_API_URL=${LAYOUT_API_URL:-http://localhost:8080/layout-parsing}
+      - OCI_BUCKET_NAME=${OCI_BUCKET_NAME:-finance-bucket}
+      - OCI_REGION=${OCI_REGION:-us-ashburn-1}
+      - OCI_AUTH_METHOD=${OCI_AUTH_METHOD:-config_file}
+      - OCI_CONFIG_FILE=${OCI_CONFIG_FILE:-/root/.oci/config}
+      - OCI_CONFIG_PROFILE=${OCI_CONFIG_PROFILE:-DEFAULT}
+      - MAX_UPLOAD_BYTES=${MAX_UPLOAD_BYTES:-52428800}
+      - MAX_PAGE_RANGE_PAGES=${MAX_PAGE_RANGE_PAGES:-50}
+      - LAYOUT_API_TIMEOUT_SECONDS=${LAYOUT_API_TIMEOUT_SECONDS:-30}
+      - LAYOUT_API_RETRIES=${LAYOUT_API_RETRIES:-2}
+      - LAYOUT_API_BACKOFF_SECONDS=${LAYOUT_API_BACKOFF_SECONDS:-0.5}
+      - LAYOUT_API_FAIL_FAST=${LAYOUT_API_FAIL_FAST:-true}
+    volumes:
+      # 方案1：挂载本机 OCI 配置（mac/linux）
+      # - "${HOME}/.oci:/root/.oci:ro"
+      # 方案2：把 OCI 配置放到项目目录 oci/ 下再挂载（更可控）
+      - "./oci:/root/.oci:ro"
+    restart: unless-stopped
+

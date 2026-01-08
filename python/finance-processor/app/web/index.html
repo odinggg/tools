@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Finance Processor</title>
+    <style>
+      body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, "Noto Sans", "PingFang SC", "Microsoft YaHei", sans-serif; max-width: 900px; margin: 24px auto; padding: 0 16px; }
+      .row { display: flex; gap: 12px; flex-wrap: wrap; }
+      .field { flex: 1 1 260px; display: flex; flex-direction: column; gap: 6px; margin: 10px 0; }
+      label { font-size: 12px; color: #444; }
+      input, select, textarea, button { font-size: 14px; padding: 8px; border: 1px solid #ccc; border-radius: 8px; }
+      textarea { min-height: 120px; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+      button { cursor: pointer; background: #111; color: #fff; border-color: #111; }
+      button[disabled] { opacity: .5; cursor: not-allowed; }
+      .progress { width: 100%; height: 12px; border-radius: 999px; background: #eee; overflow: hidden; }
+      .progress > div { height: 100%; width: 0%; background: #3b82f6; transition: width .2s ease; }
+      .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+      .small { font-size: 12px; color: #666; }
+      .card { border: 1px solid #e6e6e6; border-radius: 12px; padding: 14px; margin-top: 14px; }
+      pre { white-space: pre-wrap; word-break: break-word; }
+    </style>
+  </head>
+  <body>
+    <h2>Finance Processor</h2>
+    <div class="small">上传银行流水 PDF，提交后返回 task_id，并在此页面显示进度与结果。</div>
+
+    <div class="card">
+      <form id="f">
+        <div class="row">
+          <div class="field">
+            <label>PDF 文件</label>
+            <input type="file" name="file" accept="application/pdf" required />
+          </div>
+          <div class="field">
+            <label>page_range</label>
+            <input type="text" name="page_range" value="all" placeholder="all 或 1-5" />
+          </div>
+          <div class="field">
+            <label>max_image_side</label>
+            <input type="number" name="max_image_side" value="1024" min="256" max="4096" />
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="field">
+            <label>output_format</label>
+            <select name="output_format">
+              <option value="both" selected>both</option>
+              <option value="bean">bean</option>
+              <option value="camt">camt</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>parser_type</label>
+            <select name="parser_type">
+              <option value="cmb" selected>cmb</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>extra_config（JSON 数组）</label>
+          <textarea name="extra_config">[]</textarea>
+          <div class="small mono">示例：[{\"regex\":\"外卖\",\"rowNumber\":\"4,5\",\"addTag\":\"#food\",\"addMeta\":\"source: meituan\"}]</div>
+        </div>
+
+        <button id="submitBtn" type="submit">提交任务</button>
+      </form>
+    </div>
+
+    <div class="card">
+      <div class="row" style="align-items: center;">
+        <div style="flex: 1 1 auto;">
+          <div class="small">task_id</div>
+          <div id="taskId" class="mono">-</div>
+        </div>
+        <div style="flex: 1 1 auto;">
+          <div class="small">status</div>
+          <div id="status" class="mono">-</div>
+        </div>
+        <div style="flex: 2 1 auto;">
+          <div class="small">message</div>
+          <div id="message" class="mono">-</div>
+        </div>
+      </div>
+
+      <div style="margin-top: 10px;">
+        <div class="progress"><div id="bar"></div></div>
+        <div class="small" style="margin-top: 6px;">progress: <span id="progress">0</span>%</div>
+      </div>
+
+      <div style="margin-top: 10px;">
+        <div class="small">results / error</div>
+        <pre id="resultBox" class="mono">-</pre>
+      </div>
+    </div>
+
+    <script>
+      const $ = (id) => document.getElementById(id);
+      let pollTimer = null;
+
+      function setState({task_id, status, progress, message, results, error}) {
+        $("taskId").textContent = task_id ?? "-";
+        $("status").textContent = status ?? "-";
+        $("message").textContent = message ?? "-";
+        const p = Number(progress ?? 0);
+        $("progress").textContent = String(p);
+        $("bar").style.width = `${Math.max(0, Math.min(100, p))}%`;
+        $("resultBox").textContent = JSON.stringify(results ?? error ?? "-", null, 2);
+      }
+
+      async function poll(taskId) {
+        if (pollTimer) clearInterval(pollTimer);
+        pollTimer = setInterval(async () => {
+          try {
+            const r = await fetch(`/api/v1/tasks/${encodeURIComponent(taskId)}`);
+            const j = await r.json();
+            setState(j);
+            if (j.status === "success" || j.status === "failed" || j.status === "cancelled") {
+              clearInterval(pollTimer);
+              pollTimer = null;
+              $("submitBtn").disabled = false;
+            }
+          } catch (e) {
+            $("resultBox").textContent = String(e);
+          }
+        }, 1000);
+      }
+
+      $("f").addEventListener("submit", async (ev) => {
+        ev.preventDefault();
+        $("submitBtn").disabled = true;
+        setState({task_id:"-", status:"submitting", progress:0, message:"submitting"});
+
+        const form = new FormData(ev.target);
+        try {
+          const resp = await fetch("/api/v1/tasks", { method: "POST", body: form });
+          const data = await resp.json();
+          if (!resp.ok) {
+            $("submitBtn").disabled = false;
+            $("resultBox").textContent = JSON.stringify(data, null, 2);
+            return;
+          }
+          setState({task_id: data.task_id, status: data.status, progress:0, message:"queued"});
+          poll(data.task_id);
+        } catch (e) {
+          $("submitBtn").disabled = false;
+          $("resultBox").textContent = String(e);
+        }
+      });
+    </script>
+  </body>
+</html>
+

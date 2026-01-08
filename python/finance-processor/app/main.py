@@ -1,9 +1,12 @@
 import logging
+from pathlib import Path
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import HTMLResponse
 
 from app.config import settings
 from app.api.router import router as api_router
+from app.tasks.manager import task_manager
 
 # 配置日志
 logging.basicConfig(
@@ -29,6 +32,15 @@ def create_app() -> FastAPI:
 
     # 注册路由
     app.include_router(api_router, prefix="/api/v1")
+
+    @app.on_event("startup")
+    async def _startup():
+        await task_manager.start()
+
+    @app.get("/", include_in_schema=False)
+    async def index():
+        html_path = Path(__file__).resolve().parent / "web" / "index.html"
+        return HTMLResponse(html_path.read_text(encoding="utf-8"))
 
     @app.get("/health", tags=["Health"])
     async def health_check():
